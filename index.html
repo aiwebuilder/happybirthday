@@ -14,16 +14,19 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        html, body {
             overflow: hidden;
             height: 100vh;
             width: 100vw;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #000;
+            /* MOBILE DEFENSE: Kills pull-to-refresh and browser swipe-back */
+            touch-action: none; 
+            overscroll-behavior: none;
         }
 
         /* =========================================
-           LAYER 1: THE INNOCENT "BAIT" UI (GLASSMORPHISM)
+           LAYER 1: THE INNOCENT "BAIT" UI 
            ========================================= */
         #innocent-layer {
             position: fixed;
@@ -157,7 +160,7 @@
         }
         .loop-img.active { display: block; }
 
-        /* NEW: STROBE LAYER */
+        /* STROBE LAYER */
         #strobe-layer {
             position: fixed;
             top: 0;
@@ -176,13 +179,12 @@
             100% { opacity: 0; }
         }
 
-        /* NEW: BLOOD TEXT LAYER */
+        /* BLOOD TEXT LAYER */
         #glitch-text {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            /* Heavy font for maximum blood impact */
             font-family: 'Impact', 'Arial Black', 'Segoe UI Black', sans-serif; 
             font-weight: 900;
             text-transform: uppercase;
@@ -190,29 +192,18 @@
             pointer-events: none;
             display: none;
             white-space: nowrap;
-            /* Base red color */
             color: #8a0303; 
-            /* Initial shadow */
             text-shadow: 2px 2px 0px #380000;
         }
         
-        /* The Dripping Animation */
         .dripping-blood {
             animation: blood-drip-anim 1s infinite;
         }
         
         @keyframes blood-drip-anim {
-            0% { 
-                text-shadow: 2px 2px 0px #380000, 0 0 10px #ff0000; 
-            }
-            50% { 
-                /* Smear down */
-                text-shadow: 2px 20px 5px rgba(138, 3, 3, 0.8), 0 0 20px #ff0000; 
-            }
-            100% { 
-                /* Fade out at bottom */
-                text-shadow: 2px 40px 10px rgba(138, 3, 3, 0), 0 0 5px #ff0000; 
-            }
+            0% { text-shadow: 2px 2px 0px #380000, 0 0 10px #ff0000; }
+            50% { text-shadow: 2px 20px 5px rgba(138, 3, 3, 0.8), 0 0 20px #ff0000; }
+            100% { text-shadow: 2px 40px 10px rgba(138, 3, 3, 0), 0 0 5px #ff0000; }
         }
 
         #trap-net {
@@ -223,7 +214,6 @@
             height: 100%;
             z-index: 9999;
             display: none;
-            cursor: none;
         }
 
     </style>
@@ -261,8 +251,6 @@
         };
 
         const CREEPY_WORDS = ["I SEE YOU", "RUN", "HELP", "DIE", "LOOK BEHIND YOU", "666", "ERROR", "NO ESCAPE", "WAKE UP"];
-        
-        // Shades of blood: Fresh, Clotted, Dried, Black
         const BLOOD_COLORS = ['#ff0000', '#cc0000', '#8a0303', '#4d0000', '#300000'];
 
         // ELEMENTS
@@ -308,11 +296,9 @@
             chaosLayer.style.display = 'block';
             trapNet.style.display = 'block';
             
-            // Activate Strobe & Glitch Text
             strobeLayer.style.display = 'block';
             strobeLayer.style.animation = 'strobe-anim 0.1s infinite';
             glitchText.style.display = 'block';
-            // Add dripping blood animation class
             glitchText.classList.add('dripping-blood');
 
             forceFullscreen();
@@ -323,25 +309,20 @@
 
         function startChaosLoop() {
             setInterval(() => {
-                // 1. Image Loop
                 images[activeIndex].classList.remove('active');
                 activeIndex++;
                 if(activeIndex >= images.length) activeIndex = 0;
                 images[activeIndex].classList.add('active');
 
-                // 2. Vibration (Mobile Only)
-                if (navigator.vibrate) navigator.vibrate(50);
+                // Vibration (Mobile Only)
+                try { if (navigator.vibrate) navigator.vibrate([50, 50, 50]); } catch(e){}
 
-                // 3. Random Blood Text
+                // Random Blood Text
                 if (Math.random() > 0.6) {
                     glitchText.innerText = CREEPY_WORDS[Math.floor(Math.random() * CREEPY_WORDS.length)];
                     glitchText.style.fontSize = (Math.random() * 5 + 3) + 'rem';
+                    glitchText.style.color = BLOOD_COLORS[Math.floor(Math.random() * BLOOD_COLORS.length)];
                     
-                    // Pick a random blood color
-                    const bloodColor = BLOOD_COLORS[Math.floor(Math.random() * BLOOD_COLORS.length)];
-                    glitchText.style.color = bloodColor;
-                    
-                    // Random Position
                     const randX = Math.floor(Math.random() * 80) + 10;
                     const randY = Math.floor(Math.random() * 80) + 10;
                     glitchText.style.left = randX + '%';
@@ -374,6 +355,13 @@
             }
         });
 
+        // MOBILE DEFENSE: Intercept ALL touch movements so they can't swipe easily inside the window
+        document.addEventListener('touchmove', function(e) {
+            if(isPrankActive) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
         ['click', 'mousemove', 'mousedown', 'touchstart', 'keydown', 'resize', 'focus'].forEach(evt => {
             window.addEventListener(evt, () => {
                 if(isPrankActive && !document.fullscreenElement) forceFullscreen();
@@ -402,3 +390,5 @@
     </script>
 </body>
 </html>
+
+
