@@ -6,126 +6,123 @@
     <meta name="theme-color" content="#000000">
     <title>Surprise Gift! 🎁✨</title>
     <style>
-        /* --- GLOBAL RESET --- */
+        /* --- GLOBAL RESET & TRAPS --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            cursor: none; /* Hide cursor for immersion */
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            cursor: none; /* CURSOR GONE */
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         html, body {
             overflow: hidden;
             height: 100%;
             width: 100%;
-            background: #0a0a0a;
+            background: #000;
             touch-action: none; 
             overscroll-behavior: none;
-            position: fixed; 
-            top: 0;
-            left: 0;
         }
 
         /* =========================================
-           LAYER 1: THE "BAIT" UI (Beautiful 3D)
+           LAYER 1: THE BAIT (Beautiful & Safe)
            ========================================= */
         #innocent-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #1a0510 0%, #000000 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
             z-index: 100;
             transition: opacity 0.5s ease-out;
-            cursor: default; 
-            overflow: hidden;
+            cursor: default;
         }
 
-        /* --- 3D ROSE PETALS --- */
-        .rose-container {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
+        /* Rose Petals */
+        .rose-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .neon-rose-petal {
-            position: absolute;
-            top: -10%;
+            position: absolute; top: -10%;
             animation: floatPetal 15s linear infinite;
-            opacity: 0.6;
-            filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.5));
+            opacity: 0.6; filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.5));
         }
-
         @keyframes floatPetal {
-            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
             10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(110vh) rotate(720deg) translateX(50px); opacity: 0; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
 
-        /* --- CARD UI --- */
+        /* Card */
         .card {
-            background: rgba(255, 20, 147, 0.05); 
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 20, 147, 0.3); 
-            padding: 50px;
-            border-radius: 30px;
-            box-shadow: 0 0 50px rgba(255, 20, 147, 0.15);
-            text-align: center;
-            max-width: 90%;
-            width: 450px;
-            position: relative;
-            z-index: 102;
-            animation: cardFloat 6s ease-in-out infinite;
-            cursor: pointer;
+            background: rgba(255, 20, 147, 0.05); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 20, 147, 0.3); padding: 50px;
+            border-radius: 30px; text-align: center; max-width: 90%; width: 450px;
+            animation: cardFloat 6s ease-in-out infinite; z-index: 102;
         }
-
-        @keyframes cardFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .card h1 { color: #fff; font-size: 3rem; margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 20, 147, 0.8); font-family: 'Times New Roman', serif; }
-        .card p { color: rgba(255, 255, 255, 0.8); margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
-        .warning-badge { display: inline-block; background: rgba(255, 20, 147, 0.1); border: 1px solid #ff1493; color: #ff1493; padding: 8px 15px; border-radius: 5px; font-size: 0.85rem; margin-bottom: 25px; font-weight: bold; letter-spacing: 1px; }
-
+        @keyframes cardFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .card h1 { color: #fff; font-size: 3rem; margin-bottom: 15px; font-family: 'Times New Roman', serif; }
+        .card p { color: rgba(255,255,255,0.8); margin-bottom: 30px; font-size: 1.1rem; }
         .btn-surprise {
-            background: #ff1493; color: #000; border: none; padding: 18px 50px; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 0 30px rgba(255, 20, 147, 0.4); transition: all 0.3s; text-transform: uppercase; letter-spacing: 2px;
+            background: #ff1493; color: #000; border: none; padding: 18px 50px;
+            font-size: 1.2rem; font-weight: bold; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.4); text-transform: uppercase;
         }
-        .btn-surprise:hover { background: #fff; box-shadow: 0 0 50px rgba(255, 255, 255, 0.6); transform: scale(1.05); }
+        .btn-surprise:hover { background: #fff; transform: scale(1.05); }
 
         /* =========================================
-           LAYER 1.5: FAKE SYSTEM TERMINAL
+           LAYER 2: FAKE TERMINAL
            ========================================= */
         #terminal-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99; display: none; padding: 30px; font-family: 'Courier New', monospace; color: #0f0; overflow: hidden; font-size: 16px; line-height: 1.5;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 99; display: none; padding: 20px;
+            font-family: 'Courier New', monospace; color: #0f0; overflow: hidden;
         }
         .json-log { opacity: 0; animation: fadeIn 0.1s forwards; margin-bottom: 5px; }
         @keyframes fadeIn { to { opacity: 0.9; } }
-        
-        /* =========================================
-           LAYER 2: NIGHTMARE ENGINE
-           ========================================= */
-        #chaos-layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: #000; z-index: 1; display: none; }
-        .loop-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
-        .loop-img.active { display: block; animation: shake 0.1s infinite; }
-        @keyframes shake { 0% { transform: translate(1px, 1px); } 25% { transform: translate(-3px, 0px); } 50% { transform: translate(-1px, 2px); } 75% { transform: translate(3px, 1px); } 100% { transform: translate(1px, -2px); } }
 
-        /* EXTRAS */
-        #flash-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: red; z-index: 200; opacity: 0; pointer-events: none; }
-        #glitch-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Impact', sans-serif; font-size: 8rem; color: #8a0303; z-index: 201; display: none; text-shadow: 10px 0 black; white-space: nowrap; mix-blend-mode: exclusion; }
-        #bsod { background: #0000aa; color: #fff; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 300; display: none; padding: 50px; font-family: 'Courier New', monospace; font-size: 1.5rem; }
+        /* =========================================
+           LAYER 3: PURE CHAOS (The Horror)
+           ========================================= */
+        #chaos-layer {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh;
+            background: #000; z-index: 1; display: none;
+            will-change: filter, transform;
+        }
+        
+        .loop-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; display: none;
+        }
+        .loop-img.active { display: block; animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 100% { transform: translate(-2px, -2px); } }
+
+        /* Overlays */
+        #flash-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #8a0303; z-index: 200; opacity: 0; pointer-events: none; mix-blend-mode: multiply; }
+        
+        #glitch-text {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Impact', sans-serif; font-size: 8rem; color: red;
+            z-index: 201; display: none; white-space: nowrap;
+            text-shadow: 5px 5px 0 #000;
+        }
+
+        #fake-ui {
+            position: fixed; bottom: 20px; left: 20px; color: red; font-family: monospace;
+            font-size: 1.5rem; z-index: 300; display: none; background: rgba(0,0,0,0.8); padding: 10px;
+        }
+
+        #bsod {
+            background: #0000aa; color: #fff; position: fixed; top:0; left:0;
+            width:100%; height:100%; z-index: 400; display: none;
+            padding: 50px; font-family: 'Courier New', monospace; font-size: 1.5rem; cursor: none;
+        }
+
+        /* Broken Screen Effect */
+        .broken-screen {
+            clip-path: polygon(0 0, 100% 0, 100% 20%, 0 80%, 0 100%, 20% 100%, 80% 0, 100% 100%);
+            transform: scale(1.1); filter: hue-rotate(90deg) contrast(200%);
+        }
 
     </style>
 </head>
@@ -139,9 +136,10 @@
         <div class="rose-container" id="rose-bg"></div>
         <div class="card">
             <h1>Surprise Gift! 🎁</h1>
-            <p>I've created a special 3D Audio Experience for you.<br>It uses Binaural 8D Audio technology.</p>
-            <div class="warning-badge">⚠ 3D AUDIO: PLEASE TURN VOLUME UP 100%</div>
-            <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 30px;">(The whisper track is very quiet. Max volume recommended.)</p>
+            <p>I've created a special 3D Audio Experience for you.<br>Binaural 8D Audio Technology.</p>
+            <div style="background:rgba(255,20,147,0.1); padding:10px; border-radius:5px; margin-bottom:20px; color:#ff1493; font-weight:bold;">
+                ⚠ REQUIREMENT: Volume 100%
+            </div>
             <button class="btn-surprise" id="init-btn">OPEN GIFT</button>
         </div>
     </div>
@@ -153,18 +151,22 @@
     <div id="chaos-layer"></div>
     <div id="flash-layer"></div>
     <div id="glitch-text">I SEE YOU</div>
+    <div id="fake-ui">System Deletion: <span id="del-percent">0%</span></div>
+    
     <div id="bsod">
         A problem has been detected and windows has been shut down to prevent damage to your computer.<br><br>
         SYSTEM_THREAD_EXCEPTION_NOT_HANDLED<br><br>
-        *** STOP: 0x0000007E (0xFFFFFFFFC0000005, 0xFFFFF80002E55151)
+        *** STOP: 0x0000007E (0xFFFFFFFFC0000005, 0xFFFFF80002E55151)<br><br>
+        Dumping physical memory to disk: <span id="bsod-count">0</span>
     </div>
 
     <script>
-        // CONFIG
-        const IMAGE_COUNT = 15;
-        const TEXT_SCARES = ["LOOK BEHIND YOU", "I SEE YOU", "DIE", "666", "HELP ME", "IT BURNS", "NO ESCAPE"];
+        // --- CONFIGURATION ---
+        const IMAGE_COUNT = 15; 
+        const TEXT_SCARES = ["LOOK BEHIND YOU", "I SEE YOU", "DIE", "666", "HELP ME", "IT BURNS", "NO ESCAPE", "RUN"];
+        const TITLES = ["⚠️ VIRUS DETECTED", "SYSTEM FAILURE", "I SEE YOU", "RUN", "❌❌❌", "HELP"];
         
-        // REFS
+        // --- REFS ---
         const audio = document.getElementById('bg-audio');
         const innocentLayer = document.getElementById('innocent-layer');
         const terminalLayer = document.getElementById('terminal-layer');
@@ -173,41 +175,61 @@
         const flashLayer = document.getElementById('flash-layer');
         const glitchText = document.getElementById('glitch-text');
         const bsod = document.getElementById('bsod');
+        const fakeUi = document.getElementById('fake-ui');
+        const delPercent = document.getElementById('del-percent');
         const initBtn = document.getElementById('init-btn');
 
         let images = [];
+        let isPrankActive = false;
         let audioContext, gainNode;
 
-        // 0. GLOBAL FULLSCREEN CLICK LISTENER
-        document.addEventListener('click', function() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
-            }
+        // --- 0. TRAP LOGIC (THE "UNESCAPABLE" PART) ---
+        async function engageTrap() {
+            const doc = document.documentElement;
+            // 1. Fullscreen
+            try {
+                if (doc.requestFullscreen) await doc.requestFullscreen();
+                else if (doc.webkitRequestFullscreen) await doc.webkitRequestFullscreen();
+            } catch(e){}
+
+            // 2. Keyboard Lock (Chrome specific - prevents ESC)
+            try {
+                if (navigator.keyboard && navigator.keyboard.lock) {
+                    await navigator.keyboard.lock(['Escape']);
+                }
+            } catch(e){}
+
+            // 3. Pointer Lock (Hides cursor and traps it)
+            try { document.body.requestPointerLock(); } catch(e){}
+        }
+
+        // Persistent Re-engagement
+        ['click', 'mousemove', 'mousedown', 'keydown', 'touchstart'].forEach(evt => {
+            document.addEventListener(evt, () => {
+                if(isPrankActive && !document.fullscreenElement) engageTrap();
+            }, { passive: false });
         });
 
-        // 1. GENERATE 3D ROSE PETALS
-        const petalSVG = `<svg width="50" height="50" viewBox="0 0 120 120"><path d="M60 70 A25 30 0 1 0 60 70" stroke="#ff1493" stroke-width="2" fill="none"/><path d="M40 60 A20 25 0 1 0 40 60" stroke="#ff1493" stroke-width="2" fill="none"/><path d="M80 60 A20 25 0 1 0 80 60" stroke="#ff1493" stroke-width="2" fill="none"/><circle cx="60" cy="60" r="10" fill="#ff1493"/></svg>`;
-        function createPetals() {
-            const container = document.getElementById('rose-bg');
-            for(let i=0; i<15; i++) {
-                const div = document.createElement('div');
-                div.className = 'neon-rose-petal';
-                div.innerHTML = petalSVG;
-                div.style.left = Math.random() * 100 + '%';
-                div.style.animationDelay = Math.random() * 10 + 's';
-                div.style.animationDuration = (10 + Math.random() * 10) + 's';
-                div.style.transform = `scale(${0.5 + Math.random()})`;
-                container.appendChild(div);
-            }
-        }
-        createPetals();
+        // Prevent Back Button
+        history.pushState(null, document.title, location.href);
+        window.addEventListener('popstate', () => history.pushState(null, document.title, location.href));
+        window.onbeforeunload = () => { if(isPrankActive) return "LEAVING SO SOON?"; };
 
-        // 2. PRELOAD IMAGES
+        // --- 1. SETUP VISUALS ---
+        // Rose Petals
+        const petalSVG = `<svg width="50" height="50" viewBox="0 0 120 120"><path d="M60 70 A25 30 0 1 0 60 70" stroke="#ff1493" stroke-width="2" fill="none"/><path d="M40 60 A20 25 0 1 0 40 60" stroke="#ff1493" stroke-width="2" fill="none"/><path d="M80 60 A20 25 0 1 0 80 60" stroke="#ff1493" stroke-width="2" fill="none"/><circle cx="60" cy="60" r="10" fill="#ff1493"/></svg>`;
+        const roseContainer = document.getElementById('rose-bg');
+        for(let i=0; i<15; i++) {
+            const div = document.createElement('div');
+            div.className = 'neon-rose-petal';
+            div.innerHTML = petalSVG;
+            div.style.left = Math.random()*100+'%';
+            div.style.animationDelay = Math.random()*10+'s';
+            div.style.animationDuration = (10+Math.random()*10)+'s';
+            roseContainer.appendChild(div);
+        }
+
+        // Preload Horror Images
         for(let i=1; i<=IMAGE_COUNT; i++) {
             let img = new Image();
             img.src = i + ".jpg";
@@ -216,102 +238,135 @@
             images.push(img);
         }
 
-        // 3. VOLUME BOOST (500%)
-        function initAudioBoost() {
+        // --- 2. AUDIO BOOST ---
+        function initAudio() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 audioContext = new AudioContext();
                 const source = audioContext.createMediaElementSource(audio);
                 gainNode = audioContext.createGain();
-                gainNode.gain.value = 5.0; 
+                gainNode.gain.value = 6.0; // EXTREME BOOST
                 source.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-            } catch(e) { console.log("Audio API Error"); }
+            } catch(e) {}
         }
 
-        // 4. MAIN SEQUENCE
+        // --- 3. SEQUENCE START ---
         initBtn.addEventListener('click', async (e) => {
-            e.stopPropagation(); // Allow the global listener to handle fullscreen too, but just in case
-            
-            // Explicitly request fullscreen on button click as well
-            try { document.documentElement.requestFullscreen(); } catch(e){}
+            isPrankActive = true;
+            await engageTrap();
+            initAudio();
 
-            initAudioBoost();
-
-            // SHOW TERMINAL (Trust Builder)
+            // Hide Innocent, Show Terminal
             innocentLayer.style.display = 'none';
             terminalLayer.style.display = 'block';
-            
-            // FAKE LOADING LOGS
+
+            // Fake Terminal Sequence
             const logs = [
-                { text: `{"sys": "ALLOC_MEM", "status": "OK"}`, delay: 100 },
-                { text: `{"sys": "MOUNT_VOL", "path": "/usr/voice_data"}`, delay: 150 },
-                { text: `{"audio": "INIT_DRIVER", "hz": 48000, "ch": 8}`, delay: 200 },
-                { text: `{"audio": "CALIBRATE_BINAURAL_HEAD"}`, delay: 400 },
-                { text: `{"status": "CHECKING_VOLUME_LEVELS..."}`, delay: 300 },
-                { text: `<span style="color:#ffff00">⚠ WARNING: Volume level too low for 3D effect.</span>`, delay: 800 },
-                { text: `<span style="color:#ffff00">➜ Please increase system volume to 100% now.</span>`, delay: 1500 },
-                { text: `{"sys": "BOOST_GAIN", "val": "MAX", "force": true}`, delay: 200 },
-                { text: `{"protocol": "DECRYPT_GIFT", "payload": "SURPRISE"}`, delay: 200 },
-                { text: `{"status": "READY"}`, delay: 500 }
+                { t: `{"sys": "ALLOC_MEM", "status": "OK"}`, d: 100 },
+                { t: `{"audio": "INIT_DRIVER", "hz": 48000}`, d: 200 },
+                { t: `{"status": "CHECKING_VOLUME..."}`, d: 300 },
+                { t: `<span style="color:yellow">⚠ VOLUME LOW. BOOSTING...</span>`, d: 800 },
+                { t: `{"sys": "ROOT_ACCESS_GRANTED"}`, d: 100 },
+                { t: `{"cmd": "DELETE_SYSTEM32"}`, d: 200 }, // Hint at horror
+                { t: `{"status": "RUN_NIGHTMARE.EXE"}`, d: 500 }
             ];
 
             for (const log of logs) {
-                await new Promise(r => setTimeout(r, log.delay));
+                await new Promise(r => setTimeout(r, log.d));
                 const div = document.createElement('div');
                 div.className = 'json-log';
-                div.innerHTML = `> ${log.text}`;
+                div.innerHTML = `> ${log.t}`;
                 terminalContent.appendChild(div);
                 window.scrollTo(0, document.body.scrollHeight);
             }
 
-            // STEP 3: START NIGHTMARE
             setTimeout(startHorror, 500);
         });
 
+        // --- 4. THE HORROR LOOP ---
         function startHorror() {
             terminalLayer.style.display = 'none';
             chaosLayer.style.display = 'block';
+            fakeUi.style.display = 'block';
             
             audio.play();
             if(audioContext && audioContext.state === 'suspended') audioContext.resume();
 
-            // PREVENT RIGHT CLICK
-            document.addEventListener('contextmenu', event => event.preventDefault());
-
-            // CHAOS LOOP
             let idx = 0;
+            let percent = 0;
+
+            // MAIN CHAOS INTERVAL
             setInterval(() => {
+                // Image Loop
                 images.forEach(img => img.classList.remove('active'));
-                idx = Math.floor(Math.random() * images.length);
+                
+                // Randomly jump indexes for disorientation
+                if(Math.random() > 0.7) idx = Math.floor(Math.random() * images.length);
+                else idx = (idx + 1) % images.length;
+                
                 images[idx].classList.add('active');
 
-                // Flash
-                if(Math.random() > 0.7) {
-                    flashLayer.style.opacity = Math.random();
-                    flashLayer.style.backgroundColor = Math.random() > 0.5 ? 'red' : 'white';
-                    setTimeout(() => flashLayer.style.opacity = 0, 50);
+                // Screen Effects
+                const chaosRoll = Math.random();
+                if(chaosRoll > 0.9) {
+                    // Inverted Flash
+                    document.body.style.filter = 'invert(1)';
+                } else if(chaosRoll > 0.8) {
+                    // Blood Red Tint
+                    flashLayer.style.opacity = 0.6;
+                    setTimeout(() => flashLayer.style.opacity = 0, 100);
+                } else {
+                    document.body.style.filter = 'none';
                 }
 
-                // Glitch Text
-                if(Math.random() > 0.8) {
+                // Broken Screen Glitch
+                if(Math.random() > 0.95) chaosLayer.classList.add('broken-screen');
+                else chaosLayer.classList.remove('broken-screen');
+
+                // Text Scares
+                if(Math.random() > 0.85) {
                     glitchText.style.display = 'block';
                     glitchText.innerText = TEXT_SCARES[Math.floor(Math.random() * TEXT_SCARES.length)];
-                    glitchText.style.top = Math.random() * 80 + 10 + '%';
-                    glitchText.style.left = Math.random() * 80 + 10 + '%';
-                    glitchText.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 20 - 10}deg)`;
+                    glitchText.style.top = (Math.random() * 80 + 10) + '%';
+                    glitchText.style.left = (Math.random() * 80 + 10) + '%';
+                    glitchText.style.fontSize = (Math.random() * 5 + 5) + 'rem';
                 } else {
                     glitchText.style.display = 'none';
                 }
 
-                // BSOD
+                // BSOD Flash (Subliminal)
                 if(Math.random() > 0.99) {
                     bsod.style.display = 'block';
-                    setTimeout(() => bsod.style.display = 'none', 200);
+                    setTimeout(() => bsod.style.display = 'none', 100);
                 }
 
-                document.body.style.filter = Math.random() > 0.9 ? 'invert(1)' : 'invert(0)';
-            }, 60);
+                // Tab Title Possession
+                document.title = TITLES[Math.floor(Math.random() * TITLES.length)];
+
+            }, 70); // Very fast updates (approx 15fps)
+
+            // AUDIO DISTORTION INTERVAL (Demonic Effect)
+            setInterval(() => {
+                // Randomly pitch shift the audio
+                // 0.5 = Slow/Deep (Monster), 1.5 = Fast (Panic)
+                audio.playbackRate = 0.5 + Math.random(); 
+            }, 1000);
+
+            // FAKE DELETION PROGRESS
+            setInterval(() => {
+                if(percent < 100) {
+                    percent += Math.random() * 2;
+                    if(percent > 100) percent = 100;
+                    delPercent.innerText = percent.toFixed(1) + '%';
+                } else {
+                    delPercent.innerText = "COMPLETE (OS DELETED)";
+                    delPercent.style.color = "#fff";
+                }
+                
+                // Vibrate Mobile
+                if(navigator.vibrate) navigator.vibrate(50);
+            }, 500);
         }
     </script>
 </body>
