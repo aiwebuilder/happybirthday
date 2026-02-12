@@ -2,505 +2,378 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
-    <title>Happy Birthday! 🎂</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday... If You Survive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Raven&display=swap" rel="stylesheet">
     <style>
-        /* --- GLOBAL RESET --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            cursor: none; /* Hide cursor globally */
+        body {
+            background-color: #050505;
+            background-image: radial-gradient(#1a0505 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #d1d5db;
+            font-family: 'Raven', sans-serif;
+            overflow-x: hidden;
+            cursor: crosshair;
         }
 
-        html, body {
-            overflow: hidden;
-            height: 100%;
-            width: 100%;
-            background: #000;
-            /* DEFENSE: Kills pull-to-refresh and browser swipe-back */
-            touch-action: none; 
-            overscroll-behavior: none;
-            position: fixed; 
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+        h1, h2 {
+            font-family: 'Nosifer', cursive;
         }
 
-        /* =========================================
-           LAYER 1: THE INNOCENT "BAIT" UI 
-           ========================================= */
-        #innocent-layer {
+        .blood-text {
+            text-shadow: 2px 2px 0px #3f0000, 4px 4px 0px #1a0000;
+            animation: drip 3s infinite ease-in-out alternate;
+        }
+
+        @keyframes drip {
+            0% { text-shadow: 2px 2px 0px #3f0000, 4px 4px 0px #1a0000; color: #ff0000; }
+            100% { text-shadow: 2px 5px 2px #3f0000, 4px 10px 5px #1a0000; color: #8a0000; }
+        }
+
+        .flicker {
+            animation: flicker 4s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.1; }
+        }
+
+        .glitch-img:hover {
+            filter: contrast(1.5) hue-rotate(90deg) blur(1px);
+            transform: scale(1.05) rotate(1deg);
+            transition: all 0.1s;
+        }
+
+        /* Scanline effect */
+        .scanlines {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(at top left, #a8c0ff, transparent),
-                        radial-gradient(at bottom right, #3f2b96, transparent),
-                        linear-gradient(to bottom right, #ff9a9e, #fad0c4);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            transition: opacity 0.2s ease-out;
-            cursor: default; /* Show cursor only here */
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.3;
         }
 
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.8;
-            z-index: 101;
-            animation: floatOrb 10s infinite ease-in-out;
-        }
-
-        .orb-1 { width: 300px; height: 300px; background: #8ec5fc; top: -50px; left: -50px; }
-        .orb-2 { width: 400px; height: 400px; background: #e0c3fc; bottom: -100px; right: -100px; animation-delay: -5s; }
-
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, -30px) scale(1.1); }
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 50px 40px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            max-width: 90%;
-            width: 450px;
+        .gallery-item {
             position: relative;
-            z-index: 102;
-        }
-
-        .card h1 {
-            color: #fff;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        .card p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 40px;
-            font-size: 1.2rem;
-            line-height: 1.6;
-            font-weight: 500;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        .btn-surprise {
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: #fff;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-            outline: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        .btn-surprise:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.5); }
-        .btn-surprise:active { transform: scale(0.95); }
-        .btn-surprise:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        .loading-text {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #fff;
-            animation: fall linear forwards;
-            z-index: 101;
-            opacity: 0.8;
-        }
-
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
-
-        /* =========================================
-           LAYER 2: NIGHTMARE ENGINE
-           ========================================= */
-        #chaos-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100dvh; 
-            background: #000;
-            z-index: 1;
-            display: none;
-            /* This allows us to invert/corrupt the whole screen */
-            will-change: filter, transform;
-        }
-
-        /* ANALOG NOISE OVERLAY */
-        #noise-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 8;
-            opacity: 0.15;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            display: none;
-        }
-
-        /* DARK VIGNETTE */
-        #vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
-            z-index: 7;
-            pointer-events: none;
-            display: none;
-        }
-
-        .loop-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
+            overflow: hidden;
+            border: 1px solid #333;
+            transition: border-color 0.3s;
         }
         
-        .loop-img.active { 
-            display: block; 
-            /* Subtle zoom breathing to make it feel alive */
-            animation: pulse-terror 0.1s infinite alternate;
+        .gallery-item:hover {
+            border-color: #ff0000;
         }
 
-        @keyframes pulse-terror {
-            from { transform: scale(1.0); }
-            to { transform: scale(1.05); }
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 0, 0, 0.6);
+            transition: background 0.3s;
         }
 
-        /* FLASH LAYER */
-        #flash-layer {
+        .gallery-item:hover::after {
+            background: rgba(20, 0, 0, 0.1);
+        }
+
+        #scare-overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
+            background: black;
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .shake-hard {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite;
+            transform: translate3d(0, 0, 0);
         }
 
-        /* BLOOD TEXT LAYER */
-        #glitch-text {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Impact', 'Arial Black', sans-serif; 
-            font-weight: 900;
-            text-transform: uppercase;
-            z-index: 20;
-            pointer-events: none;
-            display: none;
-            white-space: nowrap;
-            color: #8a0303; 
-            text-shadow: 4px 4px 0px #000;
-            mix-blend-mode: exclusion; /* Makes text look "burnt" into image */
-        }
-
-        /* Anti-Escape Overlay */
-        #trap-net {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            display: none;
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
     </style>
 </head>
-<body>
+<body class="min-h-screen relative selection:bg-red-900 selection:text-white">
 
-    <audio id="bg-audio" loop>
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
+    <div class="scanlines"></div>
 
-    <!-- INNOCENT UI -->
-    <div id="innocent-layer">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="card">
-            <h1>Surprise! 🎉</h1>
-            <p>I've prepared a special digital gift for you.<br>Please ensure your volume is ON. 🔊</p>
-            <button class="btn-surprise" id="trigger-btn" disabled>Loading Gift...</button>
-            <div class="loading-text" id="load-status">Decrypting assets...</div>
-        </div>
+    <!-- Audio Context (Hidden) -->
+    <div id="audio-controls" class="fixed bottom-4 right-4 z-50">
+        <button onclick="toggleSound()" class="bg-red-900 hover:bg-red-800 text-white px-4 py-2 rounded font-mono text-xs border border-red-700 opacity-50 hover:opacity-100 transition">
+            UNMUTE AUDIO
+        </button>
     </div>
 
-    <!-- HORROR UI -->
-    <div id="chaos-layer"></div>
-    <div id="noise-layer"></div>
-    <div id="vignette"></div>
-    <div id="flash-layer"></div>
-    <div id="glitch-text"></div>
-    <div id="trap-net"></div>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 relative z-10">
+        
+        <!-- Header -->
+        <header class="text-center mb-16 relative">
+            <h1 class="text-5xl md:text-7xl mb-4 text-red-600 blood-text cursor-pointer" onclick="triggerGlitch()">
+                HAPPY BIRTHDAY
+            </h1>
+            <p class="text-xl text-gray-500 font-mono tracking-widest flicker uppercase">
+                Make a wish... it might be your last.
+            </p>
+        </header>
+
+        <!-- Message Card -->
+        <div class="max-w-2xl mx-auto bg-black border border-red-900 p-8 mb-16 shadow-[0_0_20px_rgba(139,0,0,0.3)] transform -rotate-1">
+            <p class="text-lg mb-4">
+                Another year older. Closer to the grave. We've gathered some... memories... for you.
+            </p>
+            <p class="text-red-500 italic">
+                Don't look at them too long. They stare back.
+            </p>
+            
+            <div class="mt-6 flex justify-center gap-4">
+                <button class="bg-red-900 text-black font-bold py-2 px-6 rounded hover:bg-red-700 transition duration-100 font-['Creepster'] tracking-wider text-xl">
+                    ACCEPT FATE
+                </button>
+                <button id="run-btn" onmouseover="moveButton(this)" class="bg-gray-800 text-gray-500 font-bold py-2 px-6 rounded border border-gray-700 font-['Creepster'] tracking-wider text-xl relative">
+                    ESCAPE
+                </button>
+            </div>
+        </div>
+
+        <!-- The 15 Images Grid -->
+        <h2 class="text-4xl text-center text-red-800 mb-8 font-['Creepster']">The Cursed Collection</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <!-- 1. Skull -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=400&q=80" alt="Graveyard" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 2. Ghostly -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1604005959955-f26b527037e5?auto=format&fit=crop&w=400&q=80" alt="Ghost" class="w-full h-full object-cover glitch-img">
+            </div>
+             <!-- 3. Doll -->
+             <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?auto=format&fit=crop&w=400&q=80" alt="Creepy Hands" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 4. Forest -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1455582916367-25f75bfc5456?auto=format&fit=crop&w=400&q=80" alt="Dark Forest" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 5. Pumpkin -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1505635552516-3448ff55fa91?auto=format&fit=crop&w=400&q=80" alt="Jack-o-lantern" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 6. Dark House -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1605806616949-1e87b487bc2a?auto=format&fit=crop&w=400&q=80" alt="Haunted House" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 7. Spider -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1601513445506-2ab0d4fb4229?auto=format&fit=crop&w=400&q=80" alt="Spider" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 8. Red Abstract -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1635336660724-41e97d41f124?auto=format&fit=crop&w=400&q=80" alt="Blood Red" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 9. Clown / Mask -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1528359781682-383777d59856?auto=format&fit=crop&w=400&q=80" alt="Mask" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 10. Mist -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1513258496098-b0a2df33230a?auto=format&fit=crop&w=400&q=80" alt="Mist" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 11. Alley -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1518335359483-e029c9993217?auto=format&fit=crop&w=400&q=80" alt="Dark Alley" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 12. Moon -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=400&q=80" alt="Moon" class="w-full h-full object-cover glitch-img">
+            </div>
+             <!-- 13. Crow -->
+             <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1496360938681-982d9776c494?auto=format&fit=crop&w=400&q=80" alt="Crow" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 14. Shadow -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1502422033621-c42e9603f7e4?auto=format&fit=crop&w=400&q=80" alt="Shadow" class="w-full h-full object-cover glitch-img">
+            </div>
+            <!-- 15. Cemetery Gate -->
+            <div class="gallery-item aspect-[3/4]">
+                <img src="https://images.unsplash.com/photo-1603914800685-64532de8b71d?auto=format&fit=crop&w=400&q=80" alt="Gate" class="w-full h-full object-cover glitch-img">
+            </div>
+        </div>
+
+        <footer class="mt-20 text-center text-red-900 text-sm font-mono">
+            <p>&copy; 2024 The Afterlife Corp. No refunds.</p>
+        </footer>
+
+    </main>
+
+    <!-- Jump Scare Overlay -->
+    <div id="scare-overlay" onclick="this.style.display='none'">
+        <img src="https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-50 mix-blend-luminosity shake-hard">
+        <h1 class="absolute text-9xl text-red-600 font-['Nosifer'] mix-blend-overlay">BOO!</h1>
+    </div>
 
     <script>
-        // CONFIGURATION
-        const CONFIG = {
-            imageCount: 15,          
-            fileExt: '.jpg'
-        };
+        let audioCtx;
+        let isMuted = true;
 
-        const CREEPY_WORDS = ["I SEE YOU", "RUN", "HELP", "DIE", "BEHIND YOU", "666", "ERROR", "NO ESCAPE", "WAKE UP", "IT HURTS", "DON'T LOOK"];
-        const BLOOD_COLORS = ['#ff0000', '#cc0000', '#8a0303', '#4d0000'];
+        function moveButton(btn) {
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            // Keep it within viewport loosely
+            const randomX = Math.floor(Math.random() * 200) - 100;
+            const randomY = Math.floor(Math.random() * 200) - 100;
+            
+            btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            
+            playGlitchSound();
+        }
 
-        // ELEMENTS
-        const innocentLayer = document.getElementById('innocent-layer');
-        const chaosLayer = document.getElementById('chaos-layer');
-        const flashLayer = document.getElementById('flash-layer');
-        const glitchText = document.getElementById('glitch-text');
-        const triggerBtn = document.getElementById('trigger-btn');
-        const loadStatus = document.getElementById('load-status');
-        const chaosContainer = document.getElementById('chaos-layer');
-        const audio = document.getElementById('bg-audio');
-        const noiseLayer = document.getElementById('noise-layer');
-        const vignette = document.getElementById('vignette');
-        const trapNet = document.getElementById('trap-net');
+        function triggerGlitch() {
+            const body = document.body;
+            const overlay = document.getElementById('scare-overlay');
+            
+            playScream();
 
-        let images = [];
-        let loaded = 0;
-        let activeIndex = 0;
-        let isPrankActive = false;
+            // Flash red background
+            body.style.backgroundColor = '#500000';
+            setTimeout(() => {
+                body.style.backgroundColor = '#050505';
+            }, 100);
+            setTimeout(() => {
+                body.style.backgroundColor = '#500000';
+            }, 200);
+            setTimeout(() => {
+                body.style.backgroundColor = '#050505';
+            }, 300);
 
-        function preloadImages() {
-            loadStatus.style.opacity = '1';
-            for(let i=1; i <= CONFIG.imageCount; i++) {
-                const img = new Image();
-                img.src = `${i}${CONFIG.fileExt}`;
-                img.className = 'loop-img';
-                img.loading = "eager";
-                img.onload = () => { loaded++; checkLoad(); };
-                img.onerror = () => { loaded++; checkLoad(); };
-                images.push(img);
-                chaosContainer.appendChild(img);
+            // Show overlay briefly
+            if(Math.random() > 0.5) {
+                overlay.style.display = 'flex';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
             }
         }
 
-        function checkLoad() {
-            if(loaded >= CONFIG.imageCount) {
-                triggerBtn.disabled = false;
-                triggerBtn.textContent = "Open Gift 🎁";
-                loadStatus.style.opacity = '0';
+        function toggleSound() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-        }
-
-        triggerBtn.addEventListener('click', () => {
-            isPrankActive = true;
-            innocentLayer.style.display = 'none';
-            chaosLayer.style.display = 'block';
-            noiseLayer.style.display = 'block';
-            vignette.style.display = 'block';
-            trapNet.style.display = 'block';
-            glitchText.style.display = 'block';
-
-            // TRAP: FLOOD HISTORY
-            try {
-                history.pushState(null, document.title, location.href);
-                window.addEventListener('popstate', function (event) {
-                    history.pushState(null, document.title, location.href);
-                });
-            } catch(e) {}
-
-            forceFullscreen();
-            audio.volume = 1.0;
-            audio.play();
             
-            // Start the non-linear horror loop
-            nightmareLoop();
-        });
-
-        function nightmareLoop() {
-            if(!isPrankActive) return;
-
-            // 1. Advance Image
-            images[activeIndex].classList.remove('active');
+            isMuted = !isMuted;
+            const btn = document.querySelector('#audio-controls button');
             
-            // Random jump logic: Sometimes skip images to look glitchy
-            if(Math.random() > 0.8) {
-                activeIndex = Math.floor(Math.random() * images.length);
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (!isMuted) {
+                btn.textContent = "MUTE AUDIO";
+                btn.classList.remove('opacity-50');
+                // Play a low hum
+                playDrone();
             } else {
-                activeIndex++;
-                if(activeIndex >= images.length) activeIndex = 0;
+                btn.textContent = "UNMUTE AUDIO";
+                btn.classList.add('opacity-50');
+                // Stop audio logic would go here in a complex app
             }
-            images[activeIndex].classList.add('active');
-
-            // 2. Visual Corruption (Randomly apply CSS filters)
-            const chaosRoll = Math.random();
-            if (chaosRoll > 0.9) {
-                // Invert Colors
-                chaosLayer.style.filter = "invert(100%) contrast(150%)";
-            } else if (chaosRoll > 0.8) {
-                // Deep Red Saturation
-                chaosLayer.style.filter = "sepia(100%) saturate(500%) hue-rotate(-50deg)";
-            } else if (chaosRoll > 0.7) {
-                // Blur shock
-                chaosLayer.style.filter = "blur(5px)";
-            } else {
-                // Normal
-                chaosLayer.style.filter = "contrast(120%) brightness(110%)";
-            }
-
-            // 3. Strobe Flash (Randomized)
-            if (Math.random() > 0.7) {
-                flashLayer.style.opacity = Math.random() * 0.5; // Flicker
-                flashLayer.style.background = Math.random() > 0.8 ? "red" : "white";
-            } else {
-                flashLayer.style.opacity = 0;
-            }
-
-            // 4. Glitch Text (Random words, sizes, positions)
-            if (Math.random() > 0.5) {
-                glitchText.style.display = 'block';
-                glitchText.innerText = CREEPY_WORDS[Math.floor(Math.random() * CREEPY_WORDS.length)];
-                glitchText.style.fontSize = (Math.random() * 6 + 2) + 'rem';
-                glitchText.style.color = BLOOD_COLORS[Math.floor(Math.random() * BLOOD_COLORS.length)];
-                
-                // Jitter position
-                const randX = 50 + (Math.random() * 20 - 10);
-                const randY = 50 + (Math.random() * 20 - 10);
-                glitchText.style.left = randX + '%';
-                glitchText.style.top = randY + '%';
-                
-                // Rotation
-                glitchText.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 20 - 10}deg)`;
-            } else {
-                glitchText.style.display = 'none';
-            }
-
-            // 5. Vibration (Mobile)
-            if (navigator.vibrate && Math.random() > 0.5) navigator.vibrate(50);
-
-            // 6. VARIABLE SPEED (The "Kexart" feel)
-            // Sometimes it's super fast (30ms), sometimes it pauses (150ms)
-            const nextFrameTime = Math.random() > 0.9 ? 150 : (30 + Math.random() * 40);
-
-            setTimeout(nightmareLoop, nextFrameTime);
         }
 
-        async function forceFullscreen() {
-            const doc = document.documentElement;
-            try {
-                if (doc.requestFullscreen) await doc.requestFullscreen();
-                else if (doc.webkitRequestFullscreen) await doc.webkitRequestFullscreen();
-            } catch(e) {}
+        function playGlitchSound() {
+            if (isMuted || !audioCtx) return;
             
-            try {
-                if (navigator.keyboard && navigator.keyboard.lock) {
-                    await navigator.keyboard.lock(['Escape']);
-                }
-            } catch(e) {}
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
             
-            try { document.body.requestPointerLock(); } catch(e) {}
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
         }
 
-        // --- SELF-HEALING / READJUSTMENT LOGIC ---
-        function handleBreach() {
-            if (!isPrankActive) return;
+        function playScream() {
+            if (isMuted || !audioCtx) return;
+             const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
             
-            // Punishment for resizing/escaping
-            flashLayer.style.background = "red";
-            flashLayer.style.opacity = "0.8";
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.3);
             
-            glitchText.innerText = "NO ESCAPE";
-            glitchText.style.fontSize = "6rem";
-            glitchText.style.display = "block";
+            // Add some noise/distortion feel by modulating freq rapidly (simplified)
             
-            window.scrollTo(0, 0);
-            forceFullscreen();
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
             
-            setTimeout(() => { flashLayer.style.opacity = "0"; }, 100);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
         }
 
-        window.addEventListener('resize', handleBreach);
-        if (window.visualViewport) window.visualViewport.addEventListener('resize', handleBreach);
-
-        // Prevent Scroll/Touch Navigation
-        document.body.addEventListener('touchmove', function(e) {
-            if(isPrankActive) e.preventDefault();
-        }, { passive: false });
-
-        // General Trap Listeners
-        ['click', 'mousemove', 'mousedown', 'touchstart', 'keydown', 'focus'].forEach(evt => {
-            window.addEventListener(evt, () => {
-                if(isPrankActive && !document.fullscreenElement) {
-                    forceFullscreen();
-                }
-            });
-        });
-
-        // Ensure Audio Loops
-        audio.addEventListener('ended', function() {
-            this.currentTime = 0;
-            this.play();
-        }, false);
-
-        window.onbeforeunload = function() {
-            if(isPrankActive) return "Are you sure you want to leave?";
-        };
-
-        function createConfetti() {
-            const colors = ['#fff', '#f0f', '#0ff', '#ff0'];
-            const conf = document.createElement('div');
-            conf.className = 'confetti';
-            conf.style.left = Math.random() * 100 + 'vw';
-            conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            innocentLayer.appendChild(conf);
-            setTimeout(() => conf.remove(), 5000);
+        function playDrone() {
+            if (isMuted || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.start();
+            // Let it run indefinitely for atmosphere, or stop after a while
+            // In a real app we'd track this node to stop it later.
         }
-        setInterval(createConfetti, 300);
 
-        preloadImages();
-        document.addEventListener('contextmenu', event => event.preventDefault());
+        // Random subtle movements for images
+        setInterval(() => {
+            const images = document.querySelectorAll('.gallery-item img');
+            const randomImg = images[Math.floor(Math.random() * images.length)];
+            randomImg.style.opacity = 0.5;
+            setTimeout(() => {
+                randomImg.style.opacity = 1;
+            }, 100);
+        }, 2000);
 
     </script>
 </body>
 </html>
-
 
