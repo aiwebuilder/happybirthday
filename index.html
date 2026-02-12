@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Happy Birthday! 🎂</title>
+    <title>Surprise Gift! 🎁✨</title>
     <style>
         /* --- GLOBAL RESET --- */
         * {
@@ -15,6 +15,7 @@
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
             cursor: none; /* Hide cursor globally */
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         html, body {
@@ -22,14 +23,11 @@
             height: 100%;
             width: 100%;
             background: #000;
-            /* DEFENSE: Kills pull-to-refresh and browser swipe-back */
             touch-action: none; 
             overscroll-behavior: none;
             position: fixed; 
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
         }
 
         /* =========================================
@@ -50,101 +48,66 @@
             align-items: center;
             z-index: 100;
             transition: opacity 0.2s ease-out;
-            cursor: default; /* Show cursor only here */
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.8;
-            z-index: 101;
-            animation: floatOrb 10s infinite ease-in-out;
-        }
-
-        .orb-1 { width: 300px; height: 300px; background: #8ec5fc; top: -50px; left: -50px; }
-        .orb-2 { width: 400px; height: 400px; background: #e0c3fc; bottom: -100px; right: -100px; animation-delay: -5s; }
-
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, -30px) scale(1.1); }
+            cursor: default; 
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 50px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 40px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
             text-align: center;
             max-width: 90%;
-            width: 450px;
+            width: 400px;
             position: relative;
             z-index: 102;
         }
 
-        .card h1 {
-            color: #fff;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        .card p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 40px;
-            font-size: 1.2rem;
-            line-height: 1.6;
-            font-weight: 500;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+        .card h1 { color: #fff; font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .card p { color: #fff; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.5; }
 
         .btn-surprise {
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: #fff;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            background: #fff;
+            color: #ff6b6b;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
             border-radius: 50px;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-            outline: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        .btn-surprise:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.5); }
         .btn-surprise:active { transform: scale(0.95); }
-        .btn-surprise:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .loading-text {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        /* =========================================
+           LAYER 1.5: FAKE SYSTEM TERMINAL (TRUST BUILDER)
+           ========================================= */
+        #terminal-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 99;
+            display: none;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+            overflow: hidden;
+            font-size: 14px;
+            line-height: 1.4;
         }
 
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #fff;
-            animation: fall linear forwards;
-            z-index: 101;
-            opacity: 0.8;
-        }
-
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+        .json-log { opacity: 0.8; margin-bottom: 5px; }
+        .warning-msg { color: #ff0; font-weight: bold; border: 1px solid #ff0; padding: 10px; margin: 20px 0; text-align: center;}
 
         /* =========================================
            LAYER 2: NIGHTMARE ENGINE
@@ -158,35 +121,6 @@
             background: #000;
             z-index: 1;
             display: none;
-            /* This allows us to invert/corrupt the whole screen */
-            will-change: filter, transform;
-        }
-
-        /* ANALOG NOISE OVERLAY */
-        #noise-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 8;
-            opacity: 0.15;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            display: none;
-        }
-
-        /* DARK VIGNETTE */
-        #vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
-            z-index: 7;
-            pointer-events: none;
-            display: none;
         }
 
         .loop-img {
@@ -199,308 +133,219 @@
             display: none;
         }
         
-        .loop-img.active { 
-            display: block; 
-            /* Subtle zoom breathing to make it feel alive */
-            animation: pulse-terror 0.1s infinite alternate;
+        .loop-img.active { display: block; animation: shake 0.1s infinite; }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
-        @keyframes pulse-terror {
-            from { transform: scale(1.0); }
-            to { transform: scale(1.05); }
-        }
-
-        /* FLASH LAYER */
+        /* EXTRAS */
         #flash-layer {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: red; z-index: 200; opacity: 0; pointer-events: none;
         }
 
-        /* BLOOD TEXT LAYER */
         #glitch-text {
-            position: fixed;
-            top: 50%;
-            left: 50%;
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-family: 'Impact', 'Arial Black', sans-serif; 
-            font-weight: 900;
-            text-transform: uppercase;
-            z-index: 20;
-            pointer-events: none;
-            display: none;
-            white-space: nowrap;
-            color: #8a0303; 
-            text-shadow: 4px 4px 0px #000;
-            mix-blend-mode: exclusion; /* Makes text look "burnt" into image */
+            font-family: 'Impact', sans-serif; 
+            font-size: 5rem; color: red;
+            z-index: 201; display: none;
+            text-shadow: 5px 0 black;
         }
 
-        /* Anti-Escape Overlay */
-        #trap-net {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            display: none;
+        /* FAKE CRASH UI */
+        #bsod {
+            background: #0000aa; color: #fff;
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            z-index: 300; display: none; padding: 50px;
+            font-family: 'Courier New', monospace; font-size: 1.5rem;
         }
 
     </style>
 </head>
 <body>
 
-    <audio id="bg-audio" loop>
+    <audio id="bg-audio" loop crossorigin="anonymous">
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- INNOCENT UI -->
     <div id="innocent-layer">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
         <div class="card">
-            <h1>Surprise! 🎉</h1>
-            <p>I've prepared a special digital gift for you.<br>I think, You would love it👉👈</p>
-            <button class="btn-surprise" id="trigger-btn" disabled>Loading Gift...</button>
-            <div class="loading-text" id="load-status">Decrypting assets...</div>
+            <h1>Happy Birthday! 🎂</h1>
+            <p>I made this digital memory card for you.<br>It uses 3D Binaural Audio for a surprise message.</p>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-top: -20px;">⚠ For the best experience, please <b>turn your volume UP</b> to hear the whisper track.</p>
+            <button class="btn-surprise" id="init-btn">OPEN GIFT</button>
         </div>
     </div>
 
-    <!-- HORROR UI -->
+    <div id="terminal-layer">
+        <div id="terminal-content"></div>
+    </div>
+
     <div id="chaos-layer"></div>
-    <div id="noise-layer"></div>
-    <div id="vignette"></div>
     <div id="flash-layer"></div>
-    <div id="glitch-text"></div>
-    <div id="trap-net"></div>
+    <div id="glitch-text">RUN</div>
+    <div id="bsod">
+        A problem has been detected and windows has been shut down to prevent damage to your computer.<br><br>
+        SYSTEM_THREAD_EXCEPTION_NOT_HANDLED<br><br>
+        If this is the first time you've seen this stop error screen, restart your computer. If this screen appears again, follow these steps:<br><br>
+        Check to make sure any new hardware or software is properly installed.<br>
+        If this is a new installation, ask your hardware or software manufacturer for any windows updates you might need.<br><br>
+        Technical Information:<br><br>
+        *** STOP: 0x0000007E (0xFFFFFFFFC0000005, 0xFFFFF80002E55151, 0xFFFFF880009A99D8, 0xFFFFF880009A9230)
+    </div>
 
     <script>
-        // CONFIGURATION
-        const CONFIG = {
-            imageCount: 15,          
-            fileExt: '.jpg'
-        };
-
-        const CREEPY_WORDS = ["I SEE YOU", "RUN", "HELP", "DIE", "BEHIND YOU", "666", "ERROR", "NO ESCAPE", "WAKE UP", "IT HURTS", "DON'T LOOK"];
-        const BLOOD_COLORS = ['#ff0000', '#cc0000', '#8a0303', '#4d0000'];
-
-        // ELEMENTS
+        // CONFIG
+        const IMAGE_COUNT = 15;
+        const TEXT_SCARES = ["LOOK BEHIND YOU", "I SEE YOU", "DIE", "666", "HELP ME", "IT BURNS", "NO ESCAPE"];
+        
+        // REFS
+        const audio = document.getElementById('bg-audio');
         const innocentLayer = document.getElementById('innocent-layer');
+        const terminalLayer = document.getElementById('terminal-layer');
+        const terminalContent = document.getElementById('terminal-content');
         const chaosLayer = document.getElementById('chaos-layer');
         const flashLayer = document.getElementById('flash-layer');
         const glitchText = document.getElementById('glitch-text');
-        const triggerBtn = document.getElementById('trigger-btn');
-        const loadStatus = document.getElementById('load-status');
-        const chaosContainer = document.getElementById('chaos-layer');
-        const audio = document.getElementById('bg-audio');
-        const noiseLayer = document.getElementById('noise-layer');
-        const vignette = document.getElementById('vignette');
-        const trapNet = document.getElementById('trap-net');
+        const bsod = document.getElementById('bsod');
+        const initBtn = document.getElementById('init-btn');
 
         let images = [];
-        let loaded = 0;
-        let activeIndex = 0;
-        let isPrankActive = false;
+        let audioContext, gainNode;
 
-        function preloadImages() {
-            loadStatus.style.opacity = '1';
-            for(let i=1; i <= CONFIG.imageCount; i++) {
-                const img = new Image();
-                img.src = `${i}${CONFIG.fileExt}`;
-                img.className = 'loop-img';
-                img.loading = "eager";
-                img.onload = () => { loaded++; checkLoad(); };
-                img.onerror = () => { loaded++; checkLoad(); };
-                images.push(img);
-                chaosContainer.appendChild(img);
+        // 1. PRELOAD IMAGES
+        for(let i=1; i<=IMAGE_COUNT; i++) {
+            let img = new Image();
+            img.src = i + ".jpg";
+            img.className = 'loop-img';
+            chaosLayer.appendChild(img);
+            images.push(img);
+        }
+
+        // 2. VOLUME BOOST SETUP (WEB AUDIO API)
+        function initAudioBoost() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioContext = new AudioContext();
+                const source = audioContext.createMediaElementSource(audio);
+                
+                // CREATE GAIN NODE (VOLUME BOOSTER)
+                gainNode = audioContext.createGain();
+                
+                // SET VOLUME TO 500% (Normal is 1.0)
+                gainNode.gain.value = 5.0; 
+                
+                // Connect: Source -> Gain -> Speakers
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+            } catch(e) {
+                console.log("Web Audio API not supported, falling back to normal audio");
             }
         }
 
-        function checkLoad() {
-            if(loaded >= CONFIG.imageCount) {
-                triggerBtn.disabled = false;
-                triggerBtn.textContent = "Open Gift 🎁";
-                loadStatus.style.opacity = '0';
-            }
-        }
+        // 3. FAKE TERMINAL LOGIC
+        initBtn.addEventListener('click', async () => {
+            // Request Fullscreen immediately on user gesture
+            try { document.documentElement.requestFullscreen(); } catch(e){}
 
-        triggerBtn.addEventListener('click', () => {
-            isPrankActive = true;
             innocentLayer.style.display = 'none';
+            terminalLayer.style.display = 'block';
+            
+            // Start Audio Context (must be user gesture)
+            initAudioBoost();
+            
+            // FAKE LOADING SEQUENCE
+            const logs = [
+                { text: `{"sys": "ALLOC_MEM", "addr": "0x884F", "status": "OK"}`, delay: 100 },
+                { text: `{"sys": "MOUNT_VOL", "path": "/usr/voice_data", "mode": "RW"}`, delay: 100 },
+                { text: `{"audio": "INIT_DRIVER", "hz": 48000, "ch": 2}`, delay: 200 },
+                { text: `{"audio": "CHECK_VOL", "current": "LOW"}`, delay: 300 },
+                { text: `<span style="color:red">WARNING: Volume too low for binaural decoding.</span>`, delay: 800 },
+                { text: `{"sys": "BOOST_GAIN", "val": "+20dB", "force": true}`, delay: 400 },
+                { text: `{"protocol": "DECRYPT_KEY", "payload": "SURPRISE_PACK"}`, delay: 300 },
+                { text: `{"status": "READY"}`, delay: 500 }
+            ];
+
+            for (const log of logs) {
+                await new Promise(r => setTimeout(r, log.delay));
+                const div = document.createElement('div');
+                div.className = 'json-log';
+                div.innerHTML = `> ${log.text}`;
+                terminalContent.appendChild(div);
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+
+            // TRIGGER SCARE
+            setTimeout(startHorror, 500);
+        });
+
+        // 4. HORROR ENGINE
+        function startHorror() {
+            terminalLayer.style.display = 'none';
             chaosLayer.style.display = 'block';
-            noiseLayer.style.display = 'block';
-            vignette.style.display = 'block';
-            trapNet.style.display = 'block';
-            glitchText.style.display = 'block';
-
-            // TRAP: FLOOD HISTORY
-            try {
-                history.pushState(null, document.title, location.href);
-                window.addEventListener('popstate', function (event) {
-                    history.pushState(null, document.title, location.href);
-                });
-            } catch(e) {}
-
-            forceFullscreen();
-            audio.volume = 1.0;
+            
+            // Play Audio Loop
             audio.play();
-            
-            // Start the non-linear horror loop
-            nightmareLoop();
-        });
-
-        function nightmareLoop() {
-            if(!isPrankActive) return;
-
-            // 1. Advance Image
-            images[activeIndex].classList.remove('active');
-            
-            // Random jump logic: Sometimes skip images to look glitchy
-            if(Math.random() > 0.8) {
-                activeIndex = Math.floor(Math.random() * images.length);
-            } else {
-                activeIndex++;
-                if(activeIndex >= images.length) activeIndex = 0;
-            }
-            images[activeIndex].classList.add('active');
-
-            // 2. Visual Corruption (Randomly apply CSS filters)
-            const chaosRoll = Math.random();
-            if (chaosRoll > 0.9) {
-                // Invert Colors
-                chaosLayer.style.filter = "invert(100%) contrast(150%)";
-            } else if (chaosRoll > 0.8) {
-                // Deep Red Saturation
-                chaosLayer.style.filter = "sepia(100%) saturate(500%) hue-rotate(-50deg)";
-            } else if (chaosRoll > 0.7) {
-                // Blur shock
-                chaosLayer.style.filter = "blur(5px)";
-            } else {
-                // Normal
-                chaosLayer.style.filter = "contrast(120%) brightness(110%)";
+            if(audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
             }
 
-            // 3. Strobe Flash (Randomized)
-            if (Math.random() > 0.7) {
-                flashLayer.style.opacity = Math.random() * 0.5; // Flicker
-                flashLayer.style.background = Math.random() > 0.8 ? "red" : "white";
-            } else {
-                flashLayer.style.opacity = 0;
-            }
+            // Loop Images & Effects
+            let idx = 0;
+            setInterval(() => {
+                // Switch Image
+                images.forEach(img => img.classList.remove('active'));
+                idx = Math.floor(Math.random() * images.length);
+                images[idx].classList.add('active');
 
-            // 4. Glitch Text (Random words, sizes, positions)
-            if (Math.random() > 0.5) {
-                glitchText.style.display = 'block';
-                glitchText.innerText = CREEPY_WORDS[Math.floor(Math.random() * CREEPY_WORDS.length)];
-                glitchText.style.fontSize = (Math.random() * 6 + 2) + 'rem';
-                glitchText.style.color = BLOOD_COLORS[Math.floor(Math.random() * BLOOD_COLORS.length)];
-                
-                // Jitter position
-                const randX = 50 + (Math.random() * 20 - 10);
-                const randY = 50 + (Math.random() * 20 - 10);
-                glitchText.style.left = randX + '%';
-                glitchText.style.top = randY + '%';
-                
-                // Rotation
-                glitchText.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 20 - 10}deg)`;
-            } else {
-                glitchText.style.display = 'none';
-            }
-
-            // 5. Vibration (Mobile)
-            if (navigator.vibrate && Math.random() > 0.5) navigator.vibrate(50);
-
-            // 6. VARIABLE SPEED (The "Kexart" feel)
-            // Sometimes it's super fast (30ms), sometimes it pauses (150ms)
-            const nextFrameTime = Math.random() > 0.9 ? 150 : (30 + Math.random() * 40);
-
-            setTimeout(nightmareLoop, nextFrameTime);
-        }
-
-        async function forceFullscreen() {
-            const doc = document.documentElement;
-            try {
-                if (doc.requestFullscreen) await doc.requestFullscreen();
-                else if (doc.webkitRequestFullscreen) await doc.webkitRequestFullscreen();
-            } catch(e) {}
-            
-            try {
-                if (navigator.keyboard && navigator.keyboard.lock) {
-                    await navigator.keyboard.lock(['Escape']);
+                // Random Flash
+                if(Math.random() > 0.7) {
+                    flashLayer.style.opacity = Math.random();
+                    flashLayer.style.backgroundColor = Math.random() > 0.5 ? 'red' : 'white';
+                    setTimeout(() => flashLayer.style.opacity = 0, 50);
                 }
-            } catch(e) {}
-            
-            try { document.body.requestPointerLock(); } catch(e) {}
-        }
 
-        // --- SELF-HEALING / READJUSTMENT LOGIC ---
-        function handleBreach() {
-            if (!isPrankActive) return;
-            
-            // Punishment for resizing/escaping
-            flashLayer.style.background = "red";
-            flashLayer.style.opacity = "0.8";
-            
-            glitchText.innerText = "NO ESCAPE";
-            glitchText.style.fontSize = "6rem";
-            glitchText.style.display = "block";
-            
-            window.scrollTo(0, 0);
-            forceFullscreen();
-            
-            setTimeout(() => { flashLayer.style.opacity = "0"; }, 100);
-        }
-
-        window.addEventListener('resize', handleBreach);
-        if (window.visualViewport) window.visualViewport.addEventListener('resize', handleBreach);
-
-        // Prevent Scroll/Touch Navigation
-        document.body.addEventListener('touchmove', function(e) {
-            if(isPrankActive) e.preventDefault();
-        }, { passive: false });
-
-        // General Trap Listeners
-        ['click', 'mousemove', 'mousedown', 'touchstart', 'keydown', 'focus'].forEach(evt => {
-            window.addEventListener(evt, () => {
-                if(isPrankActive && !document.fullscreenElement) {
-                    forceFullscreen();
+                // Random Text
+                if(Math.random() > 0.8) {
+                    glitchText.style.display = 'block';
+                    glitchText.innerText = TEXT_SCARES[Math.floor(Math.random() * TEXT_SCARES.length)];
+                    glitchText.style.top = Math.random() * 80 + 10 + '%';
+                    glitchText.style.left = Math.random() * 80 + 10 + '%';
+                    glitchText.style.fontSize = (Math.random() * 5 + 2) + 'rem';
+                } else {
+                    glitchText.style.display = 'none';
                 }
-            });
-        });
 
-        // Ensure Audio Loops
-        audio.addEventListener('ended', function() {
-            this.currentTime = 0;
-            this.play();
-        }, false);
+                // Random BSOD (1% chance per frame)
+                if(Math.random() > 0.99) {
+                    bsod.style.display = 'block';
+                    setTimeout(() => bsod.style.display = 'none', 200);
+                }
 
-        window.onbeforeunload = function() {
-            if(isPrankActive) return "Are you sure you want to leave?";
-        };
+                // Random Invert
+                document.body.style.filter = Math.random() > 0.9 ? 'invert(1)' : 'invert(0)';
 
-        function createConfetti() {
-            const colors = ['#fff', '#f0f', '#0ff', '#ff0'];
-            const conf = document.createElement('div');
-            conf.className = 'confetti';
-            conf.style.left = Math.random() * 100 + 'vw';
-            conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            innocentLayer.appendChild(conf);
-            setTimeout(() => conf.remove(), 5000);
+            }, 60); // Super fast 60ms loop
         }
-        setInterval(createConfetti, 300);
 
-        preloadImages();
-        document.addEventListener('contextmenu', event => event.preventDefault());
+        // Trap User
+        window.onbeforeunload = () => "Are you sure?";
+        history.pushState(null, null, location.href);
+        window.onpopstate = () => history.go(1);
 
     </script>
 </body>
 </html>
-
-
