@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#000000">
     <title>Surprise Gift! 🎁✨</title>
     <style>
-        /* --- GLOBAL RESET & NO CURSOR --- */
+        /* --- GLOBAL RESET --- */
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +14,7 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
-            cursor: none !important; /* FORCE HIDE CURSOR */
+            cursor: none; /* Hide cursor for immersion */
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
@@ -88,7 +88,7 @@
             position: relative;
             z-index: 102;
             animation: cardFloat 6s ease-in-out infinite;
-            cursor: auto; /* Show cursor only inside card initially */
+            cursor: pointer;
         }
 
         @keyframes cardFloat {
@@ -178,7 +178,19 @@
         let images = [];
         let audioContext, gainNode;
 
-        // 0. GENERATE 3D ROSE PETALS
+        // 0. GLOBAL FULLSCREEN CLICK LISTENER
+        document.addEventListener('click', function() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        });
+
+        // 1. GENERATE 3D ROSE PETALS
         const petalSVG = `<svg width="50" height="50" viewBox="0 0 120 120"><path d="M60 70 A25 30 0 1 0 60 70" stroke="#ff1493" stroke-width="2" fill="none"/><path d="M40 60 A20 25 0 1 0 40 60" stroke="#ff1493" stroke-width="2" fill="none"/><path d="M80 60 A20 25 0 1 0 80 60" stroke="#ff1493" stroke-width="2" fill="none"/><circle cx="60" cy="60" r="10" fill="#ff1493"/></svg>`;
         function createPetals() {
             const container = document.getElementById('rose-bg');
@@ -195,7 +207,7 @@
         }
         createPetals();
 
-        // 1. PRELOAD IMAGES
+        // 2. PRELOAD IMAGES
         for(let i=1; i<=IMAGE_COUNT; i++) {
             let img = new Image();
             img.src = i + ".jpg";
@@ -204,7 +216,7 @@
             images.push(img);
         }
 
-        // 2. VOLUME BOOST (500%)
+        // 3. VOLUME BOOST (500%)
         function initAudioBoost() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -217,44 +229,16 @@
             } catch(e) { console.log("Audio API Error"); }
         }
 
-        // 3. LOCKDOWN PROTOCOL (Prevent Exit)
-        function trapUser() {
-            // A. Fullscreen (Must be on click)
-            try { 
-                let elem = document.documentElement;
-                if(elem.requestFullscreen) elem.requestFullscreen();
-                else if(elem.mozRequestFullScreen) elem.mozRequestFullScreen();
-                else if(elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-                else if(elem.msRequestFullscreen) elem.msRequestFullscreen();
-            } catch(e){}
-
-            // B. Pointer Lock (Traps Mouse)
-            try { document.body.requestPointerLock(); } catch(e){}
-            
-            // C. Keyboard Lock (Chrome - Traps Escape Key)
-            try { navigator.keyboard.lock(); } catch(e){}
-        }
-
-        function activateHistoryTrap() {
-            // D. History Trap (Kills Back Button) - Activates at Scare Start
-            window.history.pushState(null, null, window.location.href);
-            window.onpopstate = function () {
-                window.history.pushState(null, null, window.location.href);
-                // Re-trigger Fullscreen if they somehow broke it
-                try { document.documentElement.requestFullscreen(); } catch(e){}
-            };
-
-            // E. Close Tab Trap (BeforeUnload)
-            window.onbeforeunload = function() { return "Are you sure you want to leave?"; };
-        }
-
         // 4. MAIN SEQUENCE
-        initBtn.addEventListener('click', async () => {
-            // STEP 1: IMMEDIATE TRAP (On Click)
-            trapUser();
+        initBtn.addEventListener('click', async (e) => {
+            e.stopPropagation(); // Allow the global listener to handle fullscreen too, but just in case
+            
+            // Explicitly request fullscreen on button click as well
+            try { document.documentElement.requestFullscreen(); } catch(e){}
+
             initAudioBoost();
 
-            // STEP 2: SHOW TERMINAL (Trust Builder)
+            // SHOW TERMINAL (Trust Builder)
             innocentLayer.style.display = 'none';
             terminalLayer.style.display = 'block';
             
@@ -286,9 +270,6 @@
         });
 
         function startHorror() {
-            // ACTIVATE SECONDARY TRAPS (History/Close)
-            activateHistoryTrap();
-
             terminalLayer.style.display = 'none';
             chaosLayer.style.display = 'block';
             
@@ -297,13 +278,6 @@
 
             // PREVENT RIGHT CLICK
             document.addEventListener('contextmenu', event => event.preventDefault());
-
-            // PREVENT KEYBOARD ESCAPE
-            document.addEventListener('keydown', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            });
 
             // CHAOS LOOP
             let idx = 0;
